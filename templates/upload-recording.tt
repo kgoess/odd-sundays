@@ -1,0 +1,36 @@
+<style>
+
+div {
+    padding: 10px;
+}
+
+</style>
+
+[% IF message %]
+    <div class="message" style="border: 1px solid green">
+        [% message | html %]
+    </div>
+[% END %]
+
+<form enctype="multipart/form-data" method="POST" action="[% uri_for( path => "/upload-recording" ) %]">
+    <div>
+        <input type="file" name="recording">
+    </div>
+    <div>
+        Name: <input type="text" name="name">
+    </div>
+    <!--
+    <div>
+        Filename for download: <input type="text" name="filename_for_download">
+    </div>
+    -->
+    <div>
+        <div>Description:</div>
+        <div>
+            <textarea name="description" rows="20" cols="85"></textarea>
+        </div>
+    </div>
+    <div>
+        <input type="submit">
+    </div>
+</form>

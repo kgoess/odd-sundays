@@ -1,0 +1,35 @@
+<style>
+
+div {
+    padding: 10px;
+}
+
+</style>
+
+[% IF message %]
+    <div class="message" style="border: 1px solid green">
+        [% message | html %]
+    </div>
+[% END %]
+
+<div>
+    <a href="[% uri_for( path => "/upload-recording" ) %]">Upload Recording</a>
+</div>
+
+
+<div>
+    [% FOR recording IN recordings %]
+        <div style="border: 1px solid black">
+            <span>[% recording.title | html %]</span>
+            <span><a href="[% uri_for( path => "/download-recording", id => recording.id) %]" download="[% recording.filename_for_download | html %]">download</a>
+            <div>
+                <span>[% recording.description | html%]</span>
+                <span>
+                    <audio controls>
+                      <source src="[% uri_for( path => "/download-recording", id => recording.id) %]" />
+                    </audio>
+                </span>
+            </div>
+        </div>
+    [% END %]
+</div>

@@ -1,0 +1,6 @@
+Changes
+Makefile.PL
+MANIFEST
+README
+t/kg-OddSaturdays.t
+lib/kg/OddSaturdays.pm
