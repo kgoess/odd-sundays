@@ -1,4 +1,4 @@
-package kg::OddSaturdays;
+package OddSundays;
 
 use 5.026003;
 use strict;
@@ -12,16 +12,16 @@ our $VERSION = '0.01';
 __END__
 =head1 NAME
 
-kg::OddSaturdays - Perl extension for blah blah blah
+OddSundays - Perl extension for blah blah blah
 
 =head1 SYNOPSIS
 
-  use kg::OddSaturdays;
+  use OddSundays;
   blah blah blah
 
 =head1 DESCRIPTION
 
-Stub documentation for kg::OddSaturdays, created by h2xs. It looks like the
+Stub documentation for OddSundays, created by h2xs. It looks like the
 author of the extension was negligent enough to leave the stub
 unedited.
 

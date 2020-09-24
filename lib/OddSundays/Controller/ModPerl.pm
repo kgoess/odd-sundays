@@ -1,23 +1,23 @@
 =head1 NAME
 
-kg::OddSaturdays::Controller::ModPerl - mod_perl controller
+OddSundays::Controller::ModPerl - mod_perl controller
 
 =head2 SYNOPSIS
 
-   <Location /odd-saturdays>
-        PerlSetEnv SQLITE_FILE /var/lib/odd-saturdays/db/odd-saturdays.sqlite
-        PerlSetEnv UPLOAD_DIR /var/lib/odd-saturdays/uploads
-        PerlSetEnv TT_INCLUDE_PATH /usr/local/odd-saturdays/templates
-        PerlSetEnv ODDSAT_URI_BASE /odd-saturdays
-        PerlSetEnv ODDSAT_STATIC_URI_BASE /odd-saturdays/static
+   <Location /odd-sundays>
+        PerlSetEnv SQLITE_FILE /var/lib/odd-sundays/db/odd-sundays.sqlite
+        PerlSetEnv UPLOAD_DIR /var/lib/odd-sundays/uploads
+        PerlSetEnv TT_INCLUDE_PATH /usr/local/odd-sundays/templates
+        PerlSetEnv ODDSAT_URI_BASE /odd-sundays
+        PerlSetEnv ODDSAT_STATIC_URI_BASE /odd-sundays/static
 
         SetHandler perl-script
-        PerlHandler kg::OddSaturdays::Controller::ModPerl
+        PerlHandler OddSundays::Controller::ModPerl
     </Location>
 
 =cut
 
-package kg::OddSaturdays::Controller::ModPerl;
+package OddSundays::Controller::ModPerl;
 
 use strict;
 use warnings;
@@ -28,11 +28,11 @@ use Apache2::Upload; # loads ->upload
 use Apache2::Const -compile => qw/:common :http/;
 use Apache2::Request;
 
-use kg::OddSaturdays::Controller __PACKAGE__;
-use kg::OddSaturdays::View __PACKAGE__;
+use OddSundays::Controller __PACKAGE__;
+use OddSundays::View __PACKAGE__;
 
 sub handler {
-    my $controller = 'kg::OddSaturdays::Controller';
+    my $controller = 'OddSundays::Controller';
     my $r = shift;
 
     #$r->content_type('text/plain');

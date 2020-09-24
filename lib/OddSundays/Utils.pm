@@ -1,4 +1,4 @@
-package kg::OddSaturdays::Utils;
+package OddSundays::Utils;
 
 
 use strict;

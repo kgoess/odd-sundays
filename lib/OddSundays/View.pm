@@ -1,5 +1,5 @@
 
-package kg::OddSaturdays::View;
+package OddSundays::View;
 
 use strict;
 use warnings;
@@ -7,10 +7,10 @@ use warnings;
 use Carp qw/croak/;
 use Template;
 
-use kg::OddSaturdays::Model::Recording;
-#use kg::OddSaturdays::Logger;
+use OddSundays::Model::Recording;
+#use OddSundays::Logger;
 
-# when either kg::OddSaturdays::Controller::ModPerl or Goc::Controller::CGI loads
+# when either OddSundays::Controller::ModPerl or Goc::Controller::CGI loads
 # this module, Perl calls this import() function and we set the location
 # of the uri_for implementation
 sub import {
@@ -30,7 +30,7 @@ sub import {
 sub main_page {
     my ($class, %p) = @_;
 
-    my @recordings = kg::OddSaturdays::Model::Recording->get_all();
+    my @recordings = OddSundays::Model::Recording->get_all();
 
     my $tt = get_tt();
 

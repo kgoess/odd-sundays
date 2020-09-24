@@ -7,7 +7,7 @@ use warnings;
 use Data::Dump qw/dump/;
 use DateTime;
 
-use kg::OddSaturdays::Model::Recording;
+use OddSundays::Model::Recording;
 
 die "set SQLITE_FILE first" unless $ENV{SQLITE_FILE};
 
@@ -19,5 +19,5 @@ close $truncate;
 # (and restart apache)
 # https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/security-enhanced_linux/sect-security-enhanced_linux-working_with_selinux-selinux_contexts_labeling_files
 
-kg::OddSaturdays::Model::Recording->create_table;
+OddSundays::Model::Recording->create_table;
 

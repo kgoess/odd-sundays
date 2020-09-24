@@ -19,16 +19,48 @@ div {
     <div>
         Name: <input type="text" name="name">
     </div>
-    <!--
-    <div>
-        Filename for download: <input type="text" name="filename_for_download">
-    </div>
-    -->
     <div>
         <div>Description:</div>
         <div>
             <textarea name="description" rows="20" cols="85"></textarea>
         </div>
+    </div>
+    <div>
+        Filename for download: <input type="text" name="filename_for_download">
+        <span>No spaces or funny characters, add an extension</span>
+    </div>
+    <div>
+        Album: <input type="text" name="album">
+    </div>
+    <div>
+        Track num: <input type="text" name="track_num"> / <input type="text" name="track_of">
+    </div>
+    <div>
+        Key Signature: <input type="text" name="key">
+    </div>
+    <div>
+        Tune Name: <input type="text" name="tune_name">
+    </div>
+    <div>
+        Tune Composer: <input type="text" name="tune_composer">
+    </div>
+    <div>
+        Tune Composed Year: <input type="text" name="tune_composed_year">
+    </div>
+    <div>
+        Tune Found In: <input type="text" name="tune_found_in">
+    </div>
+    <div>
+        Dance Name: <input type="text" name="dance_name">
+    </div>
+    <div>
+        Dance Composer: <input type="text" name="dance_composer">
+    </div>
+    <div>
+        Dance Composed Year: <input type="text" name="dance_composed_year">
+    </div>
+    <div>
+        Dance Found In: <input type="text" name="dance_found_in">
     </div>
     <div>
         <input type="submit">

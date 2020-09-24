@@ -1,4 +1,4 @@
-package kg::OddSaturdays::Model::Recording;
+package OddSundays::Model::Recording;
 
 use strict;
 use warnings;
@@ -8,7 +8,7 @@ use DBI;
 use DBD::SQLite;
 use File::Temp qw/tempfile tempdir/;
 
-use kg::OddSaturdays::Utils qw/get_dbh today_ymd/;
+use OddSundays::Utils qw/get_dbh today_ymd/;
 
 use Class::Accessor::Lite(
     new => 1,
@@ -27,9 +27,11 @@ use Class::Accessor::Lite(
     'tune_name',
     'tune_composer',
     'tune_composed_year',
+    'tune_found_in',
     'dance_name',
     'dance_composer',
     'dance_composed_year',
+    'dance_found_in',
     'deleted',
     'date_created',
     'date_updated',
@@ -57,14 +59,16 @@ sub save {
         tune_name,
         tune_composer,
         tune_composed_year,
+        tune_found_in,
         dance_name,
         dance_composer,
         dance_composed_year,
+        dance_found_in,
         deleted,
         date_created,
         date_updated
     )
-    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
 EOL
 
     if (! $self->date_created) {
@@ -95,9 +99,11 @@ EOL
             tune_name
             tune_composer
             tune_composed_year
+            tune_found_in
             dance_name
             dance_composer
             dance_composed_year
+            dance_found_in
             deleted
             date_created
             date_updated
@@ -155,9 +161,11 @@ sub update {
             tune_name = ?,
             tune_composer = ?,
             tune_composed_year = ?,
+            tune_found_in = ?,
             dance_name = ?,
             dance_composer = ?,
             dance_composed_year = ?,
+            dance_found_in = ?,
             deleted = ?,
             date_updated = ?
             /* date_created not updatable */
@@ -183,9 +191,11 @@ EOL
             tune_name
             tune_composer
             tune_composed_year
+            tune_found_in
             dance_name
             dance_composer
             dance_composed_year
+            dance_found_in
             deleted
             date_updated
             id
@@ -227,32 +237,6 @@ sub upload_dir {
     return $Upload_Dir;
 }
 
-#sub get_past_events {
-#    my ($class, %p) = @_;
-#
-#    #my $type = $p{type} || croak "missing event type in call to $class->get_past_events";
-#
-#    my $tomorrow = tomorrow_ymd();
-#
-#    my $sql = <<EOL;
-#    SELECT * FROM event
-#    WHERE date <= '$tomorrow'
-#    --AND type = ?
-#    AND deleted != 1
-#    ORDER BY date DESC, name ASC
-#    LIMIT ?
-#EOL
-#    my $limit = $p{limit} || 50;
-#    my $dbh = get_dbh();
-#    my $sth = $dbh->prepare($sql);
-#    $sth->execute($limit);
-#    my @rc;
-#    while (my $row = $sth->fetchrow_hashref) {
-#        push @rc, kg::OddSaturdays::Model::Event->new($row);
-#    }
-#    return \@rc;
-#}
-#
 sub create_table {
     my ($class) = @_;
 
@@ -272,9 +256,11 @@ CREATE TABLE recording (
     tune_name VARCHAR(255),
     tune_composer VARCHAR(255),
     tune_composed_year INT default 0,
+    tune_found_in VARCHAR(255),
     dance_name VARCHAR(255),
     dance_composer VARCHAR(255),
     dance_composed_year INT default 0,
+    dance_found_in VARCHAR(255),
     deleted BOOLEAN NOT NULL DEFAULT 0,
     date_created TEXT(20) NOT NULL,
     date_updated TEXT(20) NOT NULL

@@ -1,0 +1,172 @@
+package OddSundays::Controller;
+
+use strict;
+use warnings;
+
+use Carp qw/croak/;
+use CGI::Cookie;
+use Data::Dump qw/dump/;
+use Digest::SHA qw/sha256_hex/;
+
+#use OddSundays::Logger;
+#use OddSundays::Model::Event;
+#use OddSundays::Model::Person;
+#use OddSundays::Model::PersonEventMap;
+use OddSundays::Model::Recording;
+use OddSundays::Utils qw/today_ymdhms/;
+
+my %handler_for_path = (
+    ''                    => sub { shift->main_page(@_) },
+    '/'                   => sub { shift->main_page(@_) },
+    '/upload-recording'   => sub { shift->upload_recording(@_) },
+    '/download-recording' => sub { shift->download_recording(@_) },
+);
+
+sub go {
+    my ($class, %p) = @_;
+
+    if (my $handler = $handler_for_path{ $p{path_info} }) {
+        return $handler->($class, %p),
+    } else {
+        die "missing handler for '$p{path_info}'";
+    }
+}
+
+# when either OddSundays::Controller::ModPerl or Goc::Controller::CGI loads
+# this module, Perl calls this import() function and we set the location
+# of the uri_for implementation
+sub import {
+    my ($class, $location) = @_;
+
+    return unless $location;
+
+    no warnings 'redefine';
+
+    my $uri_for_implementation = join '::', $location, 'uri_for';
+    *uri_for = \&{$uri_for_implementation};
+
+    my $static_uri_for_implementation = join '::', $location, 'static_uri_for';
+    *static_uri_for = \&{$static_uri_for_implementation};
+}
+
+sub main_page {
+    my ($class, %p) = @_;
+
+    return {
+        action => "display",
+        content => OddSundays::View->main_page(
+            message => scalar($p{request}->param('message')),
+        ),
+    }
+}
+
+sub upload_recording {
+     my ($class, %p) = @_;
+
+     if ($p{method} eq 'GET') {
+        return {
+            action => "display",
+            content => OddSundays::View->upload_recording(
+                message => scalar($p{request}->param('message')),
+            ),
+        }
+    } elsif ($p{method} eq 'POST') {
+        # https://perl.apache.org/docs/1.0/guide/snippets.html#File_Upload_with_Apache__Request
+        my $upload = $p{request}->upload("recording")
+            or die "missing upload";
+
+        my $filename = $upload->filename;
+        my $size = $upload->size;
+        die "upload size $size is too big"
+            if $size > 50_000_000;
+        my $info = $upload->info;
+        #while (my($hdr_name, $hdr_value) = each %$info) {
+        #    # ...
+        #}
+        my $content_type = $upload->info->{"Content-type"};
+
+        # there's other ways to do this besides slurp
+        my $contents;
+        my $slurp_size = $upload->slurp($contents);
+
+        die "size mismatch $size != $slurp_size" if $size != $slurp_size;
+
+        my $sha256 = sha256_hex($contents);
+
+        my $upload_dir = '/var/lib/odd-sundays/uploads';
+        my $fh;
+        open $fh, ">", "$upload_dir/$sha256.mp3"
+            or die "can't write to $upload_dir/$sha256.mp3 $!";
+        print $fh $contents;
+        close $fh or die "can't close $upload_dir/$sha256.mp3 $!";
+
+        open $fh, ">", "$upload_dir/$sha256.txt"
+            or die "can't write to $upload_dir/$sha256.txt $!";
+        my $date = scalar localtime;
+
+        my $name        = scalar($p{request}->param('name'));
+        my $description = scalar($p{request}->param('description'));
+        my $filename_for_download = scalar($p{request}->param('filename_for_download'));
+        $filename_for_download ||= $name;
+        $filename_for_download =~ s/[^\w.-]//g;
+
+        my $fill_in = sub {
+            my $recording = shift;
+            $recording->title($name);
+            $recording->orig_filename($filename);
+            $recording->filename_for_download($filename_for_download);
+            $recording->size($size);
+            $recording->content_type($content_type);
+            $recording->description($description);
+        };
+
+        if (my $recording = OddSundays::Model::Recording->load($sha256)) {
+            $fill_in->($recording);
+            $recording->date_updated(today_ymdhms());
+            $recording->update;
+        } else {
+            my $recording = OddSundays::Model::Recording->new();
+            $fill_in->($recording);
+            $recording->id($sha256);
+            $recording->save;
+        }
+
+
+        return {
+            action => 'redirect',
+            headers => {
+                Location  => uri_for(
+                    path        => "/upload-recording",
+                    message     => qq{Upload of $filename complete},
+                ),
+            },
+        };
+
+    } else {
+        die "unrecognized method $p{method} in call to login_page";
+    }
+}
+
+sub download_recording {
+    my ($class, %p) = @_;
+
+    my $id = scalar($p{request}->param('id'))
+          or die "missing recording id";
+
+    my $recording = OddSundays::Model::Recording->load($id)
+        or die "can't find recording for id $id";
+
+    return {
+        action => 'binary-data',
+        content_type => 'audio/mpeg',
+        #content_length => ?? needed?
+        data_path => $recording->file_path,
+        size => $recording->size,
+    };
+}
+
+
+
+#
+
+1;

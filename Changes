@@ -1,6 +1,6 @@
-Revision history for Perl extension kg::OddSaturdays.
+Revision history for Perl extension OddSundays.
 
 0.01  Sat Sep 19 19:29:32 2020
 	- original version; created by h2xs 1.23 with options
-		-X kg::OddSaturdays
+		-X OddSundays
 
