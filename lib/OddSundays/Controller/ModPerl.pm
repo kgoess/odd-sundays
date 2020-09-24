@@ -4,10 +4,10 @@ OddSundays::Controller::ModPerl - mod_perl controller
 
 =head2 SYNOPSIS
 
-   <Location /odd-sundays>
+    <Location /odd-sundays>
         PerlSetEnv SQLITE_FILE /var/lib/odd-sundays/db/odd-sundays.sqlite
-        PerlSetEnv UPLOAD_DIR /var/lib/odd-sundays/uploads
         PerlSetEnv TT_INCLUDE_PATH /usr/local/odd-sundays/templates
+        PerlSetEnv UPLOAD_DIR /var/lib/odd-sundays/uploads
         PerlSetEnv ODDSAT_URI_BASE /odd-sundays
         PerlSetEnv ODDSAT_STATIC_URI_BASE /odd-sundays-static
 
