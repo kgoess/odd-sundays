@@ -118,6 +118,23 @@ sub upload_recording {
             $recording->size($size);
             $recording->content_type($content_type);
             $recording->description($description);
+            foreach my $f (qw/
+                    album
+                    track_num
+                    track_of
+                    key
+                    tune_name
+                    tune_composer
+                    tune_composed_year
+                    tune_found_in
+                    dance_name
+                    dance_composer
+                    dance_composed_year
+                    dance_found_in
+                /
+            ) {
+                $recording->$f( scalar($p{request}->param($f)) );
+            }
         };
 
         if (my $recording = OddSundays::Model::Recording->load($sha256)) {

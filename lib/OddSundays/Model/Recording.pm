@@ -272,5 +272,17 @@ EOL
     $sth->execute;
 }
 
+sub size_hr {
+    my ($self) = @_;
+
+    if ($self->size > 1024 * 1024) {
+        return sprintf "%.2f mb", $self->size / 1024 / 1024;
+    } elsif ($self->size > 1024) {
+        return sprintf "%.2f kb", $self->size / 1024 ;
+    } else {
+        return $self->size . ' bytes';
+    }
+}
+
+
 1;
-__DATA__

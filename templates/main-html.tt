@@ -1,10 +1,89 @@
 <style>
 
-div {
+body {
+    max-width: 1200px;
+}
+
+.rounded-card {
+    border-radius: 25px;
+    padding: 0.83em;
+    margin-top: 0.2em;
+    margin-bottom: 0.2em;
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+}
+
+.description {
+    background: Khaki;
+}
+.tune-details {
+    background: PeachPuff;
+}
+.dance-details {
+    background: HoneyDew;
+}
+
+.recording-list {
     padding: 10px;
+}
+.recording-row {
+    border: 1px solid black;
+    display: flex;
+}
+
+.tune-details {
+}
+
+
+.recording-header {
+}
+
+.recording-header-title {
+    margin-left: 0.83em;
+    margin-right: 0.83em;
+    margin-top: 0.83em;
+    margin-bottom: 0.3em;
+    display: flex;
+}
+
+.recording-title {
+  display: block;
+  font-size: 1.5em;
+  margin-right: 0.83em;
+  font-weight: bold;
+}
+
+.download-link {
+}
+
+.album-info {
+    margin-left: 0.83em;
+    margin-bottom: 0.83em;
+    display: flex;
+}
+
+.album-info div {
+    margin-right: 0.83em;
+}
+
+.play-audio {
+    margin-left: 0.83em;
+}
+.dance-details {
+    border: 1px solid LightBlue;
+}
+
+.updated-date {
+    font-style: italic;
+    font-size: 80%;
+    margin-top: 0.83em;
+    margin-left: 0.83em;
+    margin-bottom: 0.5em;
 }
 
 </style>
+
+<h1>Odd Sundays Recordings - Download!</h1>
 
 [% IF message %]
     <div class="message" style="border: 1px solid green">
@@ -17,19 +96,52 @@ div {
 </div>
 
 
-<div>
+<div class="recording-list">
     [% FOR recording IN recordings %]
-        <div style="border: 1px solid black">
-            <span>[% recording.title | html %]</span>
-            <span><a href="[% uri_for( path => "/download-recording", id => recording.id) %]" download="[% recording.filename_for_download | html %]">download</a>
-            <div>
-                <span>[% recording.description | html%]</span>
-                <span>
+        <div class="recording-row">
+            <div class="recording-header">
+                <div class="recording-header-title">
+                    <div class="recording-title">[% recording.title | html %]</div>
+                    <div class="download-link">
+                        <a href="[% uri_for( path => "/download-recording", id => recording.id) %]" download="[% recording.filename_for_download | html %]">
+                            <img alt="download" src="[% static_uri_for('download-icon.png') %]">
+                            ([% recording.size_hr %])
+                        </a>
+                    </div>
+                </div>
+                <div class="album-info">
+                    <div class="album">[% recording.album | html %]</div>
+                    [% IF recording.track_num %]
+                        <div class="track">Track: [% recording.track_num | html %] [% IF recording.track_of %]/ [% recording.track_of  | html%][% END %]</div>
+                    [% END %]
+                </div>
+                <div class="play-audio">
                     <audio controls>
                       <source src="[% uri_for( path => "/download-recording", id => recording.id) %]" />
                     </audio>
-                </span>
+                </div>
+                <div class="updated-date">Updated: [% recording.date_updated %]</div>
             </div>
+            [% IF recording.description %]
+                <div class="description rounded-card">
+                    [% recording.description | html | html_line_break %]
+                </div>
+            [% END %]
+            [% IF recording.tune_name || recording.tune_composer || recording.tune_found_in %]
+                <div class="tune-details rounded-card">
+                    <div>[% key | html %]</div>
+                    <div>Tune Name: [% recording.tune_name | html %]</div>
+                    <div>[% recording.tune_composer | html %] [% IF recording.tune_composed_year %]([% recording.tune_composed_year | html %])[% END %]</div>
+                    <div>Found in: [% recording.tune_found_in | html %]</div>
+                </div>
+            [% END %]
+            [% IF recording.dance_name || recording.dance_composer || recording.dance_found_in %]
+                <div class="dance-details rounded-card">
+                    <div>Dance Name: [% recording.dance_name | html %]</div>
+                    <div>[% recording.tune_composer | html %] [% IF recording.tune_composed_year %]([% recording.tune_composed_year | html %])[% END %]</div>
+                    <div>[% recording.dance_found_in | html %]</div>
+                </div>
+            [% END %]
         </div>
     [% END %]
 </div>

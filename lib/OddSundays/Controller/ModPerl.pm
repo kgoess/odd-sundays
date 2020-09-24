@@ -9,7 +9,7 @@ OddSundays::Controller::ModPerl - mod_perl controller
         PerlSetEnv UPLOAD_DIR /var/lib/odd-sundays/uploads
         PerlSetEnv TT_INCLUDE_PATH /usr/local/odd-sundays/templates
         PerlSetEnv ODDSAT_URI_BASE /odd-sundays
-        PerlSetEnv ODDSAT_STATIC_URI_BASE /odd-sundays/static
+        PerlSetEnv ODDSAT_STATIC_URI_BASE /odd-sundays-static
 
         SetHandler perl-script
         PerlHandler OddSundays::Controller::ModPerl
@@ -113,7 +113,6 @@ sub handler {
                     # Range is ok
                     if ($range eq 'bytes=0-') {
                         # They want it all, but just give them a sample
-                        print STDERR "overriding end with 65536 size is $size\n";
                         my $dribble = 65536;
                         if ($dribble < $size) {
                             $end = $dribble-1;
