@@ -138,7 +138,7 @@ body {
             [% IF recording.dance_name || recording.dance_composer || recording.dance_found_in %]
                 <div class="dance-details rounded-card">
                     <div>Dance Name: [% recording.dance_name | html %]</div>
-                    <div>[% recording.tune_composer | html %] [% IF recording.tune_composed_year %]([% recording.tune_composed_year | html %])[% END %]</div>
+                    <div>[% recording.dance_composer | html %] [% IF recording.tune_composed_year %]([% recording.tune_composed_year | html %])[% END %]</div>
                     <div>[% recording.dance_found_in | html %]</div>
                 </div>
             [% END %]
