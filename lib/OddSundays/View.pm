@@ -5,6 +5,7 @@ use strict;
 use warnings;
 
 use Carp qw/croak/;
+use Data::Dump qw/dump/;
 use Template;
 
 use OddSundays::Model::Recording;
@@ -30,7 +31,7 @@ sub import {
 }
 
 
-sub main_page {
+sub list_recordings {
     my ($class, %p) = @_;
 
     my @recordings = OddSundays::Model::Recording->get_all();
@@ -40,6 +41,7 @@ sub main_page {
     my $template = 'main-html.tt';
     my $vars = get_vars(
         \%p,
+        is_mgmt => $p{is_mgmt},
         message => $p{message},
         page_title => 'Download Page',
         recordings => @recordings,

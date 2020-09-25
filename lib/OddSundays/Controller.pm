@@ -24,7 +24,7 @@ my %handler_for_path = (
     '/download-recording'      => sub { shift->download_recording(@_) },
     "$manage/upload-recording" => sub { shift->upload_recording(@_) },
     "$manage/edit-recording"   => sub { shift->edit_recording(@_) },
-    "$manage/list-recordings"  => sub { shift->list_recordings(@_) },
+    "$manage/list-recordings"  => sub { shift->list_recordings_for_edit(@_) },
 );
 
 sub go {
@@ -62,7 +62,7 @@ sub main_page {
 
     return {
         action => "display",
-        content => OddSundays::View->main_page(
+        content => OddSundays::View->list_recordings(
             message => scalar($p{request}->param('message')),
         ),
     }
@@ -108,8 +108,6 @@ sub upload_recording {
         print $fh $contents;
         close $fh or die "can't close $upload_dir/$sha256.mp3 $!";
 
-        open $fh, ">", "$upload_dir/$sha256.txt"
-            or die "can't write to $upload_dir/$sha256.txt $!";
         my $date = scalar localtime;
 
         my $name        = scalar($p{request}->param('name'));
@@ -164,6 +162,17 @@ sub upload_recording {
 
     } else {
         die "unrecognized method $p{method} in call to login_page";
+    }
+}
+sub list_recordings_for_edit {
+    my ($class, %p) = @_;
+
+    return {
+        action => "display",
+        content => OddSundays::View->list_recordings(
+            message => scalar($p{request}->param('message')),
+            is_mgmt => 1,
+        ),
     }
 }
 

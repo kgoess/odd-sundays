@@ -92,7 +92,12 @@ body {
 
 </style>
 
+[% IF is_mgmt %]
+<h1>Management Page</h1>
+<h2>Click on a row to edit that recording</h2>
+[% ELSE %]
 <h1>Odd Sundays Recordings - Download!</h1>
+[% END %]
 
 [% IF message %]
     <div class="message" style="border: 1px solid green">
@@ -116,7 +121,7 @@ alert("Sorry, not yet implemented.\n" +
 
 <div class="recording-list">
     [% FOR recording IN recordings %]
-        <div class="recording-row">
+        <div class="recording-row" [% IF is_mgmt %]onClick="window.location.href='[% manage_uri_for( path => '/edit-recording', id => recording.id) %]'"[% END %]>
             <div class="recording-header">
                 <div class="recording-header-title">
                     <div class="recording-title">[% recording.title | html %]</div>
