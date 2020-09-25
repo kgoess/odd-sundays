@@ -12,7 +12,7 @@ div {
     </div>
 [% END %]
 
-<form enctype="multipart/form-data" method="POST" action="[% uri_for( path => "/upload-recording" ) %]">
+<form enctype="multipart/form-data" method="POST" action="[% manage_uri_for( path => "/upload-recording" ) %]">
     <div>
         <input type="file" name="recording">
     </div>

@@ -24,6 +24,9 @@ sub import {
 
     my $static_uri_for_implementation = join '::', $location, 'static_uri_for';
     *static_uri_for = \&{$static_uri_for_implementation};
+
+    my $manage_uri_for_implementation = join '::', $location, 'manage_uri_for';
+    *manage_uri_for = \&{$manage_uri_for_implementation};
 }
 
 
@@ -88,6 +91,7 @@ sub get_vars {
     return {
         uri_for        => \&uri_for,
         static_uri_for => \&static_uri_for,
+        manage_uri_for => \&manage_uri_for,
         %vars,
     };
 }

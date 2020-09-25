@@ -101,7 +101,7 @@ body {
 [% END %]
 
 <div>
-    <a href="[% uri_for( path => "/upload-recording" ) %]">Upload Recording</a>
+    <a href="[% manage_uri_for( path => "/upload-recording" ) %]">Upload Recording</a>
 </div>
 
 <script>

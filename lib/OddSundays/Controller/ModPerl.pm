@@ -8,8 +8,10 @@ OddSundays::Controller::ModPerl - mod_perl controller
         PerlSetEnv SQLITE_FILE /var/lib/odd-sundays/db/odd-sundays.sqlite
         PerlSetEnv TT_INCLUDE_PATH /usr/local/odd-sundays/templates
         PerlSetEnv UPLOAD_DIR /var/lib/odd-sundays/uploads
-        PerlSetEnv ODDSAT_URI_BASE /odd-sundays
-        PerlSetEnv ODDSAT_STATIC_URI_BASE /odd-sundays-static
+        PerlSetEnv URI_BASE /odd-sundays
+        PerlSetEnv STATIC_URI_BASE /odd-sundays-static
+        PerlSetEnv MGMT_URI_KEY 014e846f-9148-45f6-b5a8-f0025afbd494
+        # (uuidgen is helpful to generate that)
 
         SetHandler perl-script
         PerlHandler OddSundays::Controller::ModPerl
@@ -59,6 +61,7 @@ sub handler {
             request   => Apache2::Request->new($r),
             uri_for   => \&uri_for,
             static_uri_for => \&static_uri_for,
+            manage_uri_for => \&manage_uri_for,
         );
         1;
     } or do {
@@ -150,9 +153,11 @@ sub uri_for {
         %p = @_;
     }
 
-    my $path = delete $p{path} || '/';
+    my $path        = delete $p{path} || '/';
+    my $want_manage = delete $p{want_manage} || '';
 
-    my $base = $ENV{ODDSAT_URI_BASE} or die "ODDSAT_URI_BASE is unset in ENV";
+    my $base       = $ENV{URI_BASE} or die "URI_BASE is unset in ENV";
+    my $manage_key = $ENV{MGMT_URI_KEY} or die "MGMT_URI_KEY is unset in ENV";
 
     my $url_params = '';
     if (keys %p) {
@@ -160,15 +165,29 @@ sub uri_for {
         $url_params .= join '&', map { "$_=$p{$_}" } sort keys %p;
     }
 
-    return "$base$path$url_params";
+    my $manage = $want_manage ? "/manage/$manage_key" : '';
+
+    return "$base$manage$path$url_params";
+}
+
+sub manage_uri_for {
+    my %p;
+    if (ref $_[0] eq 'HASH') { # TT sends a hashref
+        %p = %{ $_[0] };
+    } else {
+        %p = @_;
+    }
+
+    return uri_for(%p, want_manage => 1);
 }
 
 sub static_uri_for {
     my ($path) = @_;
 
-    my $base = $ENV{ODDSAT_STATIC_URI_BASE} or die "ODDSAT_STATIC_URI_BASE is unset in ENV";
+    my $base = $ENV{STATIC_URI_BASE} or die "STATIC_URI_BASE is unset in ENV";
 
-    return "$ENV{ODDSAT_STATIC_URI_BASE}/$path";
+    return "$ENV{STATIC_URI_BASE}/$path";
 }
+
 
 1;

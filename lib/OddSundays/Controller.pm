@@ -15,11 +15,16 @@ use Digest::SHA qw/sha256_hex/;
 use OddSundays::Model::Recording;
 use OddSundays::Utils qw/today_ymdhms/;
 
+my $manage_key = $ENV{MGMT_URI_KEY} or die "MGMT_URI_KEY is unset in ENV";
+my $manage = "/manage/$manage_key";
+
 my %handler_for_path = (
-    ''                    => sub { shift->main_page(@_) },
-    '/'                   => sub { shift->main_page(@_) },
-    '/upload-recording'   => sub { shift->upload_recording(@_) },
-    '/download-recording' => sub { shift->download_recording(@_) },
+    ''                         => sub { shift->main_page(@_) },
+    '/'                        => sub { shift->main_page(@_) },
+    '/download-recording'      => sub { shift->download_recording(@_) },
+    "$manage/upload-recording" => sub { shift->upload_recording(@_) },
+    "$manage/edit-recording"   => sub { shift->edit_recording(@_) },
+    "$manage/list-recordings"  => sub { shift->list_recordings(@_) },
 );
 
 sub go {
@@ -42,11 +47,14 @@ sub import {
 
     no warnings 'redefine';
 
-    my $uri_for_implementation = join '::', $location, 'uri_for';
-    *uri_for = \&{$uri_for_implementation};
-
-    my $static_uri_for_implementation = join '::', $location, 'static_uri_for';
-    *static_uri_for = \&{$static_uri_for_implementation};
+#    my $uri_for_implementation = join '::', $location, 'uri_for';
+#    *uri_for = \&{$uri_for_implementation};
+#
+#    my $static_uri_for_implementation = join '::', $location, 'static_uri_for';
+#    *static_uri_for = \&{$static_uri_for_implementation};
+#
+#    my $manage_uri_for_implementation = join '::', $location, 'manage_uri_for';
+#    *manage_uri_for = \&{$manage_uri_for_implementation};
 }
 
 sub main_page {
@@ -147,7 +155,7 @@ sub upload_recording {
             action => 'redirect',
             headers => {
                 # maybe redirect to edit recording?
-                Location  => uri_for(
+                Location  => $p{manage_uri_for}->(
                     path        => "/upload-recording",
                     message     => qq{Upload of $filename complete},
                 ),
