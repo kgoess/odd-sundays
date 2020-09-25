@@ -73,6 +73,15 @@ body {
     border: 1px solid LightBlue;
 }
 
+.show-instructions-button {
+    border-radius: 50px;
+    margin-top: 2em;
+    margin-bottom: 2em;
+    margin-left: 2em;
+    margin-right: 2em;
+
+}
+
 .updated-date {
     font-style: italic;
     font-size: 80%;
@@ -95,6 +104,15 @@ body {
     <a href="[% uri_for( path => "/upload-recording" ) %]">Upload Recording</a>
 </div>
 
+<script>
+
+function showDanceInstructions (id, name) {
+alert("Sorry, not yet implemented.\n" +
+ "But here I'd show the dance instructions for " + name +
+ " in an overlay window");
+
+}
+</script>
 
 <div class="recording-list">
     [% FOR recording IN recordings %]
@@ -135,11 +153,14 @@ body {
                     <div>Found in: [% recording.tune_found_in | html %]</div>
                 </div>
             [% END %]
-            [% IF recording.dance_name || recording.dance_composer || recording.dance_found_in %]
+            [% IF recording.dance_name || recording.dance_composer || recording.dance_found_in || recording.dance_instructions %]
                 <div class="dance-details rounded-card">
                     <div>Dance Name: [% recording.dance_name | html %]</div>
                     <div>[% recording.dance_composer | html %] [% IF recording.tune_composed_year %]([% recording.dance_composed_year | html %])[% END %]</div>
                     <div>Found in: [% recording.dance_found_in | html %]</div>
+                    [% IF recording.dance_instructions %]
+                        <button class="show-instructions-button" type="button" onclick="showDanceInstructions([% recording.id %],'[% recording.title | html %]')">Dance<br>Instructions</button>
+                    [% END %]
                 </div>
             [% END %]
         </div>

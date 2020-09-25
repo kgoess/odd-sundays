@@ -63,6 +63,10 @@ div {
         Dance Found In: <input type="text" name="dance_found_in">
     </div>
     <div>
+        Dance Instructions:<br>
+            <textarea name="dance_instructions" rows="20" cols="85"></textarea>
+    </div>
+    <div>
         <input type="submit">
     </div>
 </form>

@@ -135,6 +135,7 @@ sub upload_recording {
                 dance_composer
                 dance_composed_year
                 dance_found_in
+                dance_instructions
             /
         ) {
             $recording->$f( scalar($p{request}->param($f)) );

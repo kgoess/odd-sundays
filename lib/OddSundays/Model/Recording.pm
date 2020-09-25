@@ -33,6 +33,7 @@ use Class::Accessor::Lite(
     'dance_composer',
     'dance_composed_year',
     'dance_found_in',
+    'dance_instructions',
     'deleted',
     'date_created',
     'date_updated',
@@ -65,11 +66,12 @@ sub save {
         dance_composer,
         dance_composed_year,
         dance_found_in,
+        dance_instructions,
         deleted,
         date_created,
         date_updated
     )
-    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
 EOL
 
     if (! $self->date_created) {
@@ -105,6 +107,7 @@ EOL
             dance_composer
             dance_composed_year
             dance_found_in
+            dance_instructions
             deleted
             date_created
             date_updated
@@ -193,6 +196,7 @@ sub update {
             dance_composer = ?,
             dance_composed_year = ?,
             dance_found_in = ?,
+            dance_instructions = ?,
             deleted = ?,
             date_updated = ?
             /* date_created not updatable */
@@ -223,6 +227,7 @@ EOL
             dance_composer
             dance_composed_year
             dance_found_in
+            dance_instructions
             deleted
             date_updated
             id
@@ -289,6 +294,7 @@ CREATE TABLE recording (
     dance_composer VARCHAR(255),
     dance_composed_year INT default 0,
     dance_found_in VARCHAR(255),
+    dance_instructions VARCHAR(8192),
     deleted BOOLEAN NOT NULL DEFAULT 0,
     date_created TEXT(20) NOT NULL,
     date_updated TEXT(20) NOT NULL
