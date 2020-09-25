@@ -14,6 +14,7 @@ use Class::Accessor::Lite(
     new => 1,
     rw  => [
     'id',
+    'sha256',
     'title',
     'orig_filename',
     'filename_for_download',
@@ -45,7 +46,7 @@ sub save {
 
     my $sql = <<EOL;
     INSERT INTO recording (
-        id,
+        sha256,
         title,
         orig_filename,
         filename_for_download,
@@ -85,7 +86,7 @@ EOL
     my $sth = $dbh->prepare($sql);
     $sth->execute(
         map { $self->$_ }
-        qw/ id
+        qw/ sha256
             title
             orig_filename
             filename_for_download
@@ -109,6 +110,7 @@ EOL
             date_updated
         /
     );
+    $self->id($dbh->sqlite_last_insert_rowid);
 }
 
 sub date_pretty {
@@ -142,12 +144,37 @@ sub load {
     }
 }
 
+sub load_by_sha256 {
+    my ($class, $sha256, %p) = @_;
+
+    croak "missing id in call to $class->load" unless $sha256;
+
+    # by default deleted ones aren't returned, so two records
+    # can have the same sha256
+    my $sql = 'SELECT * FROM recording WHERE sha256 = ?';
+
+    if ($p{include_deleted}) {
+        $sql .= ' AND deleted = 1 ';
+    } else {
+        $sql .= ' AND deleted = 0 ';
+    }
+
+    my $dbh = get_dbh();
+    my $sth = $dbh->prepare($sql);
+    $sth->execute($sha256);
+    if (my $row = $sth->fetchrow_hashref) {
+        return bless $row, $class;
+    } else {
+        return;
+    }
+}
+
 sub update {
     my ($self) = @_;
 
     my $sql = <<EOL;
         UPDATE recording SET
-            id = ?,
+            sha256 = ?,
             title = ?,
             orig_filename = ?,
             filename_for_download = ?,
@@ -177,7 +204,7 @@ EOL
     $self->date_updated(today_ymd());
     $sth->execute(
         map { $self->$_ }
-        qw/ id
+        qw/ sha256
             title
             orig_filename
             filename_for_download
@@ -228,7 +255,7 @@ EOL
 
 sub file_path {
     my ($self) = @_;
-    my $id = $self->id;
+    my $id = $self->sha256;
 
     return "$Upload_Dir/$id.mp3";
 }
@@ -242,7 +269,8 @@ sub create_table {
 
     my $sql = <<EOL;
 CREATE TABLE recording (
-    id VARCHAR(64) PRIMARY KEY NOT NULL,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    sha256 VARCHAR(64) NOT NULL,
     title VARCHAR(255) NOT NULL, /* length is ignored */
     orig_filename VARCHAR(255),
     filename_for_download VARCHAR(255),
@@ -270,6 +298,17 @@ EOL
     my $dbh = get_dbh();
     my $sth = $dbh->prepare($sql);
     $sth->execute;
+
+    # not unique so two entries could share the same file
+        my $index_sql = <<EOL;
+CREATE INDEX idx_recording_sha256
+ON recording
+(sha256);
+EOL
+
+    $sth = $dbh->prepare($index_sql);
+    $sth->execute;
+
 }
 
 sub size_hr {

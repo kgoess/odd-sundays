@@ -110,48 +110,42 @@ sub upload_recording {
         $filename_for_download ||= $name;
         $filename_for_download =~ s/[^\w.-]//g;
 
-        my $fill_in = sub {
-            my $recording = shift;
-            $recording->title($name);
-            $recording->orig_filename($filename);
-            $recording->filename_for_download($filename_for_download);
-            $recording->size($size);
-            $recording->content_type($content_type);
-            $recording->description($description);
-            foreach my $f (qw/
-                    album
-                    track_num
-                    track_of
-                    key
-                    tune_name
-                    tune_composer
-                    tune_composed_year
-                    tune_found_in
-                    dance_name
-                    dance_composer
-                    dance_composed_year
-                    dance_found_in
-                /
-            ) {
-                $recording->$f( scalar($p{request}->param($f)) );
-            }
-        };
-
-        if (my $recording = OddSundays::Model::Recording->load($sha256)) {
-            $fill_in->($recording);
-            $recording->date_updated(today_ymdhms());
-            $recording->update;
-        } else {
-            my $recording = OddSundays::Model::Recording->new();
-            $fill_in->($recording);
-            $recording->id($sha256);
-            $recording->save;
+        if (my $recording = OddSundays::Model::Recording->load_by_sha256($sha256)) {
+            die "that file already uploaded for ".$recording->title."[".$recording->id."]";
         }
 
+        my $recording = OddSundays::Model::Recording->new();
+        $recording->title($name);
+        $recording->sha256($sha256);
+        $recording->orig_filename($filename);
+        $recording->filename_for_download($filename_for_download);
+        $recording->size($size);
+        $recording->content_type($content_type);
+        $recording->description($description);
+        foreach my $f (qw/
+                album
+                track_num
+                track_of
+                key
+                tune_name
+                tune_composer
+                tune_composed_year
+                tune_found_in
+                dance_name
+                dance_composer
+                dance_composed_year
+                dance_found_in
+            /
+        ) {
+            $recording->$f( scalar($p{request}->param($f)) );
+        }
+
+        $recording->save;
 
         return {
             action => 'redirect',
             headers => {
+                # maybe redirect to edit recording?
                 Location  => uri_for(
                     path        => "/upload-recording",
                     message     => qq{Upload of $filename complete},
@@ -167,11 +161,11 @@ sub upload_recording {
 sub download_recording {
     my ($class, %p) = @_;
 
-    my $id = scalar($p{request}->param('id'))
-          or die "missing recording id";
+    my $sha256 = scalar($p{request}->param('sha256'))
+          or die "missing recording sha256";
 
-    my $recording = OddSundays::Model::Recording->load($id)
-        or die "can't find recording for id $id";
+    my $recording = OddSundays::Model::Recording->load_by_sha256($sha256)
+        or die "can't find recording for sha256 $sha256";
 
     return {
         action => 'binary-data',

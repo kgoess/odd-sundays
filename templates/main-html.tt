@@ -103,7 +103,7 @@ body {
                 <div class="recording-header-title">
                     <div class="recording-title">[% recording.title | html %]</div>
                     <div class="download-link">
-                        <a href="[% uri_for( path => "/download-recording", id => recording.id) %]" download="[% recording.filename_for_download | html %]">
+                        <a href="[% uri_for( path => "/download-recording", sha256 => recording.sha256) %]" download="[% recording.filename_for_download | html %]">
                             <img alt="download" src="[% static_uri_for('download-icon.png') %]">
                             ([% recording.size_hr %])
                         </a>
@@ -117,7 +117,7 @@ body {
                 </div>
                 <div class="play-audio">
                     <audio controls>
-                      <source src="[% uri_for( path => "/download-recording", id => recording.id) %]" />
+                      <source src="[% uri_for( path => "/download-recording", sha256 => recording.sha256) %]" />
                     </audio>
                 </div>
                 <div class="updated-date">Updated: [% recording.date_updated %]</div>
@@ -138,8 +138,8 @@ body {
             [% IF recording.dance_name || recording.dance_composer || recording.dance_found_in %]
                 <div class="dance-details rounded-card">
                     <div>Dance Name: [% recording.dance_name | html %]</div>
-                    <div>[% recording.dance_composer | html %] [% IF recording.tune_composed_year %]([% recording.tune_composed_year | html %])[% END %]</div>
-                    <div>[% recording.dance_found_in | html %]</div>
+                    <div>[% recording.dance_composer | html %] [% IF recording.tune_composed_year %]([% recording.dance_composed_year | html %])[% END %]</div>
+                    <div>Found in: [% recording.dance_found_in | html %]</div>
                 </div>
             [% END %]
         </div>
