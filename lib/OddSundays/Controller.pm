@@ -176,6 +176,27 @@ sub list_recordings_for_edit {
     }
 }
 
+sub edit_recording {
+    my ($class, %p) = @_;
+
+     if ($p{method} eq 'GET') {
+        my $id = scalar($p{request}->param('id'))
+            or die "missing param 'id' in edit_recording";
+        my $recording = OddSundays::Model::Recording->load($id)
+            or die "no recording found for id $id";
+        return {
+            action => "display",
+            content => OddSundays::View->edit_recording(
+                message => scalar($p{request}->param('message')),
+                recording => $recording,
+            ),
+        }
+
+    } elsif ($p{method} eq 'POST') {
+        die "unimplemented";
+    }
+}
+
 sub download_recording {
     my ($class, %p) = @_;
 

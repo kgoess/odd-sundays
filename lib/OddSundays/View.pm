@@ -72,6 +72,25 @@ sub upload_recording {
 
     return $output;
 }
+sub edit_recording {
+    my ($class, %p) = @_;
+
+    my $tt = get_tt();
+
+    my $template = 'upload-recording.tt';
+    my $vars = get_vars(
+        \%p,
+        message => $p{message},
+        page_title => 'Edit Recording',
+        recording => $p{recording},
+    );
+    my $output = '';
+
+    $tt->process($template, $vars, \$output)
+           || die $tt->error();
+
+    return $output;
+}
 
 my $_tt;
 sub get_tt {
