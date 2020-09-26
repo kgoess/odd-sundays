@@ -31,6 +31,11 @@
     <div>
         Name: <input type="text" name="title" value="[% recording.title | html %]"> (required)
     </div>
+    [% IF is_edit %]
+    <div style="font-style: italic; font-size: 80%; margin-left: 15px; margin-bottom: 5px;">
+        uploaded from [% recording.orig_filename %] ([% recording.content_type %]) [% recording.size_hr %]
+    </div>
+    [% END %]
     <div>
         <div>Description:</div>
         <div>

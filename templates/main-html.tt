@@ -61,7 +61,9 @@ alert("Sorry, not yet implemented.\n" +
         <div class="recording-row" [% IF is_mgmt %]data-mgmt-url="[% manage_uri_for( path => '/edit-recording', id => recording.id) %]"[% END %]>
             <div class="recording-header">
                 <div class="recording-header-title">
-                    <div class="recording-title [% IF recording.deleted %]recording-deleted[% END %]">[% recording.title | html %]</div>
+                    <div class="recording-title [% IF recording.deleted %]recording-deleted[% END %]">
+                        [% recording.title | html %]
+                    </div>
                     [% IF ! is_mgmt %]
                     <div class="download-link">
                         <a href="[% uri_for( path => "/download-recording", sha256 => recording.sha256) %]" download="[% recording.filename_for_download | html %]">
@@ -71,6 +73,11 @@ alert("Sorry, not yet implemented.\n" +
                     </div>
                     [% END %]
                 </div>
+                [% IF is_mgmt %]
+                    <div style="font-style: italic; font-size: 80%; margin-left: 15px; margin-bottom: 5px;">
+                        uploaded from [% recording.orig_filename %] ([% recording.content_type %])
+                    </div>
+                [% END %]
                 <div class="album-info">
                     <div class="album">[% recording.album | html %]</div>
                     [% IF recording.track_num %]
