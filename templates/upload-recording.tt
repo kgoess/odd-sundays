@@ -1,25 +1,5 @@
 <style>
 
-body {
-    padding: 40px;
-}
-
-div {
-    padding: 10px;
-}
-
-.message {
-    border: 1px solid green;
-    background-color: yellow;
-    margin: 10px;
-}
-
-.instructions {
-    border: 1px solid goldenrod;
-    background-color: lightgrey;
-    margin: 10px;
-}
-
 </style>
 
 [% IF message %]

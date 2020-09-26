@@ -1,0 +1,151 @@
+
+#site-title {
+    font-family: 'Indie Flower', cursive;
+    font-size: 300%;
+    margin: 25px;
+}
+
+.project-name {
+    font-family: 'Indie Flower', cursive;
+}
+
+.site-blurb {
+    background-color: AntiqueWhite;
+    margin:25px;
+    padding: 25px;
+    border-radius: 25px;
+    max-width: 800px;
+}
+
+.site-blurb div {
+    margin-bottom: 10px;
+}
+
+/* stuff from main-html */
+body {
+    max-width: 1200px;
+    padding: 40px;
+}
+
+.rounded-card {
+    border-radius: 25px;
+    padding: 0.83em;
+    margin-top: 0.2em;
+    margin-bottom: 0.2em;
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+    min-width: 9em;
+}
+
+.description {
+    background: Khaki;
+}
+.tune-details {
+    background: PeachPuff;
+}
+.dance-details {
+    background: HoneyDew;
+}
+
+.recording-list {
+    padding: 10px;
+}
+.recording-row {
+    border: 1px solid black;
+    display: flex;
+}
+
+.recording-row:hover {
+    background-color: beige;
+}
+
+.tune-details {
+}
+
+
+.recording-header {
+}
+
+.recording-header-title {
+    margin-left: 0.83em;
+    margin-right: 0.83em;
+    margin-top: 0.83em;
+    margin-bottom: 0.3em;
+    display: flex;
+}
+
+.recording-title {
+  display: block;
+  font-size: 1.5em;
+  margin-right: 0.83em;
+  font-weight: bold;
+}
+
+.download-link {
+}
+
+.album-info {
+    margin-left: 0.83em;
+    margin-bottom: 0.83em;
+    display: flex;
+}
+
+.album-info div {
+    margin-right: 0.83em;
+}
+
+.play-audio {
+    margin-left: 0.83em;
+}
+.dance-details {
+    border: 1px solid LightBlue;
+}
+
+.show-instructions-button {
+    border-radius: 50px;
+    margin-top: 2em;
+    margin-bottom: 2em;
+    margin-left: 2em;
+    margin-right: 2em;
+
+}
+
+.updated-date {
+    font-style: italic;
+    font-size: 80%;
+    margin-top: 0.83em;
+    margin-left: 0.83em;
+    margin-bottom: 0.5em;
+}
+
+.message {
+    border: 1px solid green;
+    background-color: yellow;
+    margin: 10px;
+    padding: 10px;
+}
+
+.instructions {
+    border: 1px solid goldenrod;
+    background-color: lightgrey;
+    margin: 10px;
+}
+
+.fake-audio-for-mgmt {
+    margin: 10px;
+    padding: 10px;
+    border-radius: 25px;
+}
+
+.upload-button {
+    margin: 10px;
+    padding: 10px;
+    border-radius: 25px;
+}
+
+/* stuff from upload-recording.tt */
+form div {
+    padding: 10px;
+}
+
+
