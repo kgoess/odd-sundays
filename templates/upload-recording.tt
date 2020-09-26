@@ -92,6 +92,9 @@
             <textarea name="dance_instructions" rows="20" cols="85">[% recording.dance_instructions | html %]</textarea>
     </div>
     <div>
+        Deleted (hidden from users): <input type="checkbox" name="deleted" [% IF recording.deleted %]checked[% END %]>
+    </div>
+    <div>
         <input type="submit">
     </div>
 </form>

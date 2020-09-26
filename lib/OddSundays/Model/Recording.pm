@@ -145,9 +145,7 @@ sub load {
 
     my $sql = 'SELECT * FROM recording WHERE id = ?';
 
-    if ($p{include_deleted}) {
-        $sql .= ' AND deleted = 1 ';
-    } else {
+    if (!$p{include_deleted}) {
         $sql .= ' AND deleted = 0 ';
     }
 
@@ -170,9 +168,7 @@ sub load_by_sha256 {
     # can have the same sha256
     my $sql = 'SELECT * FROM recording WHERE sha256 = ?';
 
-    if ($p{include_deleted}) {
-        $sql .= ' AND deleted = 1 ';
-    } else {
+    if (!$p{include_deleted}) {
         $sql .= ' AND deleted = 0 ';
     }
 
@@ -262,9 +258,7 @@ sub get_all {
     SELECT * from recording
 EOL
 
-    if ($p{include_deleted}) {
-        $sql .= ' WHERE deleted = 1 ';
-    } else {
+    if (!$p{include_deleted}) {
         $sql .= ' WHERE deleted = 0 ';
     }
 

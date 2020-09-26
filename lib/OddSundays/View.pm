@@ -34,7 +34,7 @@ sub import {
 sub list_recordings {
     my ($class, %p) = @_;
 
-    my @recordings = OddSundays::Model::Recording->get_all();
+    my @recordings = OddSundays::Model::Recording->get_all($p{is_mgmt} ? ( include_deleted => 1) : ());
 
     my $tt = get_tt();
 

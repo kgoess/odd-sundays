@@ -61,7 +61,7 @@ alert("Sorry, not yet implemented.\n" +
         <div class="recording-row" [% IF is_mgmt %]data-mgmt-url="[% manage_uri_for( path => '/edit-recording', id => recording.id) %]"[% END %]>
             <div class="recording-header">
                 <div class="recording-header-title">
-                    <div class="recording-title">[% recording.title | html %]</div>
+                    <div class="recording-title [% IF recording.deleted %]recording-deleted[% END %]">[% recording.title | html %]</div>
                     [% IF ! is_mgmt %]
                     <div class="download-link">
                         <a href="[% uri_for( path => "/download-recording", sha256 => recording.sha256) %]" download="[% recording.filename_for_download | html %]">
@@ -79,14 +79,16 @@ alert("Sorry, not yet implemented.\n" +
                 </div>
                 <div class="play-audio">
                     [% IF is_mgmt %]
-                        <button class="fake-audio-for-mgmt"> ▶  🎶 la la la 🎵🎶</button>
+                        [% IF ! recording.deleted %]
+                            <button class="fake-audio-for-mgmt"> ▶  🎶 la la la 🎵🎶</button>
+                        [% END %]
                     [% ELSE %]
                         <audio controls> <!-- see  preload="metadata" attr? -->
                           <source src="[% uri_for( path => "/download-recording", sha256 => recording.sha256) %]" />
                         </audio>
                     [% END %]
                 </div>
-                <div class="updated-date">Updated: [% recording.date_updated | html %]</div>
+                <div class="updated-date">[% IF recording.deleted %]Deleted: [% ELSE %]Updated: [% END %][% recording.date_updated | html %]</div>
             </div>
             [% IF recording.description %]
                 <div class="description rounded-card">

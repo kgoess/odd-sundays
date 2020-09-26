@@ -129,6 +129,12 @@ sub upload_recording {
         ) {
             $recording->$f( scalar($p{request}->param($f)) );
         }
+        my $deleted = scalar($p{request}->param('deleted'));
+        if ($deleted eq 'on') {
+            $recording->deleted(1);
+        } else {
+            $recording->deleted(0);
+        }
 
         $recording->save;
 
@@ -205,7 +211,7 @@ sub edit_recording {
      if ($p{method} eq 'GET') {
         my $id = scalar($p{request}->param('id'))
             or die "missing param 'id' in edit_recording";
-        my $recording = OddSundays::Model::Recording->load($id)
+        my $recording = OddSundays::Model::Recording->load($id, include_deleted => 1)
             or die "no recording found for id '$id'";
         return {
             action => "display",
@@ -220,7 +226,7 @@ sub edit_recording {
         my $id = scalar($p{request}->param('id'))
             or die "missing param 'id' in edit_recording";
 
-        my $recording = OddSundays::Model::Recording->load($id)
+        my $recording = OddSundays::Model::Recording->load($id, include_deleted => 1)
             or die "no recording found for id '$id'";
 
         if (my $upload = $p{request}->upload("recording")) {
@@ -254,6 +260,12 @@ sub edit_recording {
             /
         ) {
             $recording->$f( scalar($p{request}->param($f)) );
+        }
+        my $deleted = scalar($p{request}->param('deleted'));
+        if ($deleted eq 'on') {
+            $recording->deleted(1);
+        } else {
+            $recording->deleted(0);
         }
 
         $recording->save;
