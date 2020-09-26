@@ -9,6 +9,8 @@
                                           <!-- FIXME basedir -->
 <link rel="stylesheet" type="text/css" href="[% static_uri_for('styles.css') %]" />
 
+<link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
+
 <!-- for the date picker -->
 <!-- 
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">

@@ -125,10 +125,34 @@ body {
 </style>
 [% END %]
 
+[% IF ! is_mgmt %]
+<script>
+function showDanceInstructions (id, name) {
+alert("Sorry, not yet implemented.\n" +
+ "But here I'd show the dance instructions for " + name +
+ " in an overlay window");
+}
+</script>
+[% END %]
+
 [% IF is_mgmt %]
 <h1>This is the Management Page</h1>
 [% ELSE %]
-<h1>Odd Sundays Recordings - Download!</h1>
+<div class="site-blurb">
+    <div>
+    This is music recorded by the Judy Linsenberg, Shira Kammen and Patti Cobb
+    for the <span class="project-name">Odd Sundays English Dance</span> run by
+    Sharon Green and Kalia Kliban.
+    </div>
+    <div>
+    Production of these <span class="project-name">Odd Sundays</span>
+    recordings was funded by the <a href="https://www.bacds.org"> Bay Area Country
+    Dance Society</a> and is provided here for your enjoyment under the <a
+    href="https://creativecommons.org/licenses/by-sa/4.0/">Attribution-ShareAlike</a>
+    license.
+    </div>
+</div>
+<hr>
 [% END %]
 
 [% IF message %]
@@ -233,12 +257,6 @@ body {
 <script>
 // why at end? https://stackoverflow.com/a/9899701
 
-function showDanceInstructions (id, name) {
-alert("Sorry, not yet implemented.\n" +
- "But here I'd show the dance instructions for " + name +
- " in an overlay window");
-
-}
 [% IF is_mgmt %]
 
 function captureRowClick(e, mgmtUrl) {
