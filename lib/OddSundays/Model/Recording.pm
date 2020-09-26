@@ -269,7 +269,7 @@ EOL
     while (my $row = $sth->fetchrow_hashref) {
         push @rc, $class->new($row);
     }
-    return \@rc;
+    return @rc;
 }
 
 sub file_path {

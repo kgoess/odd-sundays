@@ -34,7 +34,8 @@ sub import {
 sub list_recordings {
     my ($class, %p) = @_;
 
-    my @recordings = OddSundays::Model::Recording->get_all($p{is_mgmt} ? ( include_deleted => 1) : ());
+    my @recordings = sort { $a->title cmp $b->title }
+        OddSundays::Model::Recording->get_all($p{is_mgmt} ? ( include_deleted => 1) : ());
 
     my $tt = get_tt();
 
@@ -44,7 +45,7 @@ sub list_recordings {
         is_mgmt => $p{is_mgmt},
         message => $p{message},
         page_title => 'Download Page',
-        recordings => @recordings,
+        recordings => \@recordings,
     );
     my $output = '';
 
