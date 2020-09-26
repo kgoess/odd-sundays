@@ -1,32 +1,60 @@
 <style>
 
+body {
+    padding: 40px;
+}
+
 div {
     padding: 10px;
+}
+
+.message {
+    border: 1px solid green;
+    background-color: yellow;
+    margin: 10px;
+}
+
+.instructions {
+    border: 1px solid goldenrod;
+    background-color: lightgrey;
+    margin: 10px;
 }
 
 </style>
 
 [% IF message %]
-    <div class="message" style="border: 1px solid green">
+    <div class="message" >
         [% message | html %]
     </div>
 [% END %]
 
-<form enctype="multipart/form-data" method="POST" action="[% manage_uri_for( path => "/upload-recording" ) %]">
-    [% IF recording %]
+<div class="instructions">
+    <ul>
+        <li>Almost every field is optional. Feel free to leave things blank.
+    </ul>
+</div>
+
+<form enctype="multipart/form-data" method="POST" 
+[% IF is_edit %]
+    action="[% manage_uri_for( path => "/edit-recording" ) %]"
+[% ELSE %]
+    action="[% manage_uri_for( path => "/upload-recording" ) %]"
+[% END %]
+>
+    [% IF is_edit %]
         <input type="hidden" name="id" value="[% recording.id %]">
         <input type="hidden" name="is_edit" value="1">
     [% END %]
     <div>
-        <input type="file" name="recording"> <!-- how will this work on edit? -->
+        <input type="file" name="recording"> [% IF ! recording %](required)[% END %]
     </div>
     <div>
-        Name: <input type="text" name="name" value="[% recording.title | html %]">
+        Name: <input type="text" name="title" value="[% recording.title | html %]">
     </div>
     <div>
         <div>Description:</div>
         <div>
-            <textarea name="description" rows="20" cols="85">[% recording.description | html %]</textarea>
+            <textarea name="description" rows="20" cols="60">[% recording.description | html %]</textarea>
         </div>
     </div>
     <div>
@@ -42,32 +70,45 @@ div {
     <div>
         Key Signature: <input type="text" name="key" value="[% recording.key | html %]">
     </div>
+    <hr>
+    <h3>Tune</h3>
     <div>
-        Tune Name: <input type="text" name="tune_name" value="[% recording.tune_name | html %]">
+        Name: <input type="text" name="tune_name" value="[% recording.tune_name | html %]">
     </div>
     <div>
-        Tune Composer: <input type="text" name="tune_composer" value="[% recording.tune_composer | html %]">
+        Composer: <input type="text" name="tune_composer" value="[% recording.tune_composer | html %]">
     </div>
     <div>
-        Tune Composed Year: <input type="text" name="tune_composed_year" value="[% recording.tune_composed_year | html %]">
+        Composed Year: <input type="text" name="tune_composed_year" value="[% recording.tune_composed_year | html %]">
     </div>
     <div>
-        Tune Found In: <input type="text" name="tune_found_in" value="[% recording.tune_found_in | html %]">
+        Found In: <input type="text" name="tune_found_in" value="[% recording.tune_found_in | html %]">
     </div>
     <div>
-        Dance Name: <input type="text" name="dance_name" value="[% recording.dance_name | html %]">
+        Number Times Through Played : <input type="text" name="tune_times_through" value="[% recording.tune_times_through | html %]">
     </div>
     <div>
-        Dance Composer: <input type="text" name="dance_composer" value="[% recording.dance_composer | html %]">
+        Played Structure (e.g. AABB): <input type="text" name="tune_played_structure" value="[% recording.tune_played_structure | html %]">
     </div>
     <div>
-        Dance Composed Year: <input type="text" name="dance_composed_year" value="[% recording.dance_composed_year | html %]">
+        Copyright Notes: <input type="text" name="tune_copyright_notes" value="[% recording.tune_copyright_notes | html %]">
+    </div>
+    <hr>
+    <h3>Dance</h3>
+    <div>
+        Name: <input type="text" name="dance_name" value="[% recording.dance_name | html %]">
     </div>
     <div>
-        Dance Found In: <input type="text" name="dance_found_in" value="[% recording.dance_found_in | html %]">
+        Composer: <input type="text" name="dance_composer" value="[% recording.dance_composer | html %]">
     </div>
     <div>
-        Dance Instructions:<br>
+        Composed Year: <input type="text" name="dance_composed_year" value="[% recording.dance_composed_year | html %]">
+    </div>
+    <div>
+        Found In: <input type="text" name="dance_found_in" value="[% recording.dance_found_in | html %]">
+    </div>
+    <div>
+        Dance Instructions: (solo dance? group dance? put them all here?)<br>
             <textarea name="dance_instructions" rows="20" cols="85">[% recording.dance_instructions | html %]</textarea>
     </div>
     <div>

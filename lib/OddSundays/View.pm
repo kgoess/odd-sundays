@@ -83,6 +83,7 @@ sub edit_recording {
         message => $p{message},
         page_title => 'Edit Recording',
         recording => $p{recording},
+        is_edit => 1,
     );
     my $output = '';
 

@@ -79,69 +79,52 @@ sub upload_recording {
             ),
         }
     } elsif ($p{method} eq 'POST') {
-        # https://perl.apache.org/docs/1.0/guide/snippets.html#File_Upload_with_Apache__Request
+
         my $upload = $p{request}->upload("recording")
             or die "missing upload";
 
-        my $filename = $upload->filename;
-        my $size = $upload->size;
-        die "upload size $size is too big"
-            if $size > 50_000_000;
-        my $info = $upload->info;
-        #while (my($hdr_name, $hdr_value) = each %$info) {
-        #    # ...
-        #}
-        my $content_type = $upload->info->{"Content-type"};
+        my $upload_info = handle_upload($upload);
 
-        # there's other ways to do this besides slurp
-        my $contents;
-        my $slurp_size = $upload->slurp($contents);
-
-        die "size mismatch $size != $slurp_size" if $size != $slurp_size;
-
-        my $sha256 = sha256_hex($contents);
-
-        my $upload_dir = '/var/lib/odd-sundays/uploads';
-        my $fh;
-        open $fh, ">", "$upload_dir/$sha256.mp3"
-            or die "can't write to $upload_dir/$sha256.mp3 $!";
-        print $fh $contents;
-        close $fh or die "can't close $upload_dir/$sha256.mp3 $!";
-
-        my $date = scalar localtime;
-
-        my $name        = scalar($p{request}->param('name'));
+        my $title       = scalar($p{request}->param('title'));
         my $description = scalar($p{request}->param('description'));
-        my $filename_for_download = scalar($p{request}->param('filename_for_download'));
-        $filename_for_download ||= $name;
+
+        my $filename_for_download = 
+            scalar($p{request}->param('filename_for_download'));
+        $filename_for_download ||= $title;
         $filename_for_download =~ s/[^\w.-]//g;
 
-        if (my $recording = OddSundays::Model::Recording->load_by_sha256($sha256)) {
+        if (my $recording = OddSundays::Model::Recording
+                                ->load_by_sha256($upload_info->{sha256})
+        ) {
             die "that file already uploaded for ".$recording->title."[".$recording->id."]";
         }
 
         my $recording = OddSundays::Model::Recording->new();
-        $recording->title($name);
-        $recording->sha256($sha256);
-        $recording->orig_filename($filename);
+        $recording->title($title);
+        $recording->sha256       ($upload_info->{sha256});
+        $recording->size         ($upload_info->{size});
+        $recording->content_type ($upload_info->{content_type});
+        $recording->orig_filename($upload_info->{filename});
+
         $recording->filename_for_download($filename_for_download);
-        $recording->size($size);
-        $recording->content_type($content_type);
         $recording->description($description);
         foreach my $f (qw/
-                album
-                track_num
-                track_of
-                key
-                tune_name
-                tune_composer
-                tune_composed_year
-                tune_found_in
-                dance_name
-                dance_composer
-                dance_composed_year
-                dance_found_in
-                dance_instructions
+            album
+            track_num
+            track_of
+            key
+            tune_name
+            tune_composer
+            tune_composed_year
+            tune_found_in
+            tune_times_through
+            tune_played_structure
+            tune_copyright_notes
+            dance_name
+            dance_composer
+            dance_composed_year
+            dance_found_in
+            dance_instructions
             /
         ) {
             $recording->$f( scalar($p{request}->param($f)) );
@@ -154,16 +137,56 @@ sub upload_recording {
             headers => {
                 # maybe redirect to edit recording?
                 Location  => $p{manage_uri_for}->(
-                    path        => "/upload-recording",
-                    message     => qq{Upload of $filename complete},
+                    path        => "/list-recordings",
+                    message     => qq{Upload of $upload_info->{filename} complete},
                 ),
             },
         };
 
     } else {
-        die "unrecognized method $p{method} in call to login_page";
+        die "unrecognized method $p{method} in call to upload_recording";
     }
 }
+
+sub handle_upload {
+    my ($upload) = @_;
+
+    # https://perl.apache.org/docs/1.0/guide/snippets.html#File_Upload_with_Apache__Request
+
+    my $filename = $upload->filename;
+    my $size = $upload->size;
+    die "upload size $size is too big"
+        if $size > 50_000_000;
+    my $info = $upload->info;
+    #while (my($hdr_name, $hdr_value) = each %$info) {
+    #    # ...
+    #}
+    my $content_type = $upload->info->{"Content-type"};
+
+    # there's other ways to do this besides slurp
+    my $contents;
+    my $slurp_size = $upload->slurp($contents);
+
+    die "size mismatch $size != $slurp_size" if $size != $slurp_size;
+
+    my $sha256 = sha256_hex($contents);
+
+    my $upload_dir = $ENV{UPLOAD_DIR}
+        or die "upload_dir not set in environment";
+    my $fh;
+    open $fh, ">", "$upload_dir/$sha256.mp3"
+        or die "can't write to $upload_dir/$sha256.mp3 $!";
+    print $fh $contents;
+    close $fh or die "can't close $upload_dir/$sha256.mp3 $!";
+
+    return {
+        filename     => $filename,
+        size         => $size,
+        content_type => $content_type,
+        sha256       => $sha256,
+    }
+}
+
 sub list_recordings_for_edit {
     my ($class, %p) = @_;
 
@@ -183,7 +206,7 @@ sub edit_recording {
         my $id = scalar($p{request}->param('id'))
             or die "missing param 'id' in edit_recording";
         my $recording = OddSundays::Model::Recording->load($id)
-            or die "no recording found for id $id";
+            or die "no recording found for id '$id'";
         return {
             action => "display",
             content => OddSundays::View->edit_recording(
@@ -193,7 +216,61 @@ sub edit_recording {
         }
 
     } elsif ($p{method} eq 'POST') {
-        die "unimplemented";
+
+        my $id = scalar($p{request}->param('id'))
+            or die "missing param 'id' in edit_recording";
+
+        my $recording = OddSundays::Model::Recording->load($id)
+            or die "no recording found for id '$id'";
+
+        if (my $upload = $p{request}->upload("recording")) {
+            my $upload_info = handle_upload($upload);
+            $recording->sha256       ($upload_info->{sha256});
+            $recording->size         ($upload_info->{size});
+            $recording->content_type ($upload_info->{content_type});
+            $recording->orig_filename($upload_info->{filename});
+        }
+
+        foreach my $f (qw/
+            title
+            description
+            filename_for_download
+            album
+            track_num
+            track_of
+            key
+            tune_name
+            tune_composer
+            tune_composed_year
+            tune_found_in
+            tune_times_through
+            tune_played_structure
+            tune_copyright_notes
+            dance_name
+            dance_composer
+            dance_composed_year
+            dance_found_in
+            dance_instructions
+            /
+        ) {
+            $recording->$f( scalar($p{request}->param($f)) );
+        }
+
+        $recording->save;
+
+        return {
+            action => 'redirect',
+            headers => {
+                # maybe redirect to edit recording?
+                Location  => $p{manage_uri_for}->(
+                    path        => "/list-recordings",
+                    message     => "Your edits to '".$recording->title."' have been saved.",
+                ),
+            },
+        };
+
+    } else {
+        die "unrecognized method $p{method} in call to edit_recording";
     }
 }
 

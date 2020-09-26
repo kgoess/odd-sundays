@@ -29,6 +29,9 @@ use Class::Accessor::Lite(
     'tune_composer',
     'tune_composed_year',
     'tune_found_in',
+    'tune_times_through',
+    'tune_played_structure',
+    'tune_copyright_notes',
     'dance_name',
     'dance_composer',
     'dance_composed_year',
@@ -42,8 +45,13 @@ use Class::Accessor::Lite(
 
 my $Upload_Dir = $ENV{UPLOAD_DIR} or die "missing UPLOAD_DIR in env";
 
+
 sub save {
     my ($self) = @_;
+
+    if ($self->id) {
+        return $self->update;
+    }
 
     my $sql = <<EOL;
     INSERT INTO recording (
@@ -62,6 +70,9 @@ sub save {
         tune_composer,
         tune_composed_year,
         tune_found_in,
+        tune_times_through,
+        tune_played_structure,
+        tune_copyright_notes,
         dance_name,
         dance_composer,
         dance_composed_year,
@@ -71,7 +82,7 @@ sub save {
         date_created,
         date_updated
     )
-    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
 EOL
 
     if (! $self->date_created) {
@@ -103,6 +114,9 @@ EOL
             tune_composer
             tune_composed_year
             tune_found_in
+            tune_times_through
+            tune_played_structure
+            tune_copyright_notes
             dance_name
             dance_composer
             dance_composed_year
@@ -192,6 +206,9 @@ sub update {
             tune_composer = ?,
             tune_composed_year = ?,
             tune_found_in = ?,
+            tune_times_through = ?,
+            tune_played_structure = ?,
+            tune_copyright_notes = ?,
             dance_name = ?,
             dance_composer = ?,
             dance_composed_year = ?,
@@ -223,6 +240,9 @@ EOL
             tune_composer
             tune_composed_year
             tune_found_in
+            tune_times_through
+            tune_played_structure
+            tune_copyright_notes
             dance_name
             dance_composer
             dance_composed_year
@@ -290,6 +310,9 @@ CREATE TABLE recording (
     tune_composer VARCHAR(255),
     tune_composed_year INT default 0,
     tune_found_in VARCHAR(255),
+    tune_times_through VARCHAR(16), -- no need to force INT because who knows?
+    tune_played_structure VARCHAR(64), -- e.g. AABB
+    tune_copyright_notes VARCHAR(255),
     dance_name VARCHAR(255),
     dance_composer VARCHAR(255),
     dance_composed_year INT default 0,

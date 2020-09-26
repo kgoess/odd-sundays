@@ -90,60 +90,98 @@ body {
     margin-bottom: 0.5em;
 }
 
+.message {
+    border: 1px solid green;
+    background-color: yellow;
+    margin: 10px;
+    padding: 10px;
+}
+
+.instructions {
+    border: 1px solid goldenrod;
+    background-color: lightgrey;
+    margin: 10px;
+}
+
+.fake-audio-for-mgmt {
+    margin: 10px;
+    padding: 10px;
+    border-radius: 25px;
+}
+
+.upload-button {
+    margin: 10px;
+    padding: 10px;
+    border-radius: 25px;
+}
+
+
 </style>
+[% IF is_mgmt %]
+<style>
+body {
+    background-color: lightsteelblue;
+}
+</style>
+[% END %]
 
 [% IF is_mgmt %]
-<h1>Management Page</h1>
-<h2>Click on a row to edit that recording</h2>
+<h1>This is the Management Page</h1>
 [% ELSE %]
 <h1>Odd Sundays Recordings - Download!</h1>
 [% END %]
 
 [% IF message %]
-    <div class="message" style="border: 1px solid green">
+    <div class="message">
         [% message | html %]
     </div>
 [% END %]
 
+[% IF is_mgmt %]
 <div>
-    <a href="[% manage_uri_for( path => "/upload-recording" ) %]">Upload Recording</a>
+    <button class="upload-button" onclick="window.location.href='[% manage_uri_for( path => "/upload-recording" ) %]'">
+        Upload A New Recording
+    </button>
 </div>
+<div class="instructions">
+    <ul>
+        <li>Click on a row to edit that recording
+    </ul>
+</div>
+[% END %]
 
-<script>
-
-function showDanceInstructions (id, name) {
-alert("Sorry, not yet implemented.\n" +
- "But here I'd show the dance instructions for " + name +
- " in an overlay window");
-
-}
-</script>
 
 <div class="recording-list">
     [% FOR recording IN recordings %]
-        <div class="recording-row" [% IF is_mgmt %]onClick="window.location.href='[% manage_uri_for( path => '/edit-recording', id => recording.id) %]'"[% END %]>
+        <div class="recording-row" [% IF is_mgmt %]data-mgmt-url="[% manage_uri_for( path => '/edit-recording', id => recording.id) %]"[% END %]>
             <div class="recording-header">
                 <div class="recording-header-title">
                     <div class="recording-title">[% recording.title | html %]</div>
+                    [% IF ! is_mgmt %]
                     <div class="download-link">
                         <a href="[% uri_for( path => "/download-recording", sha256 => recording.sha256) %]" download="[% recording.filename_for_download | html %]">
                             <img alt="download" src="[% static_uri_for('download-icon.png') %]">
-                            ([% recording.size_hr %])
+                            ([% recording.size_hr | html %])
                         </a>
                     </div>
+                    [% END %]
                 </div>
                 <div class="album-info">
                     <div class="album">[% recording.album | html %]</div>
                     [% IF recording.track_num %]
-                        <div class="track">Track: [% recording.track_num | html %] [% IF recording.track_of %]/ [% recording.track_of  | html%][% END %]</div>
+                        <div class="track">Track: [% recording.track_num | html %] [% IF recording.track_of %]/ [% recording.track_of  | html %][% END %]</div>
                     [% END %]
                 </div>
                 <div class="play-audio">
-                    <audio controls>
-                      <source src="[% uri_for( path => "/download-recording", sha256 => recording.sha256) %]" />
-                    </audio>
+                    [% IF is_mgmt %]
+                        <button class="fake-audio-for-mgmt"> ▶  🎶 la la la 🎵🎶</button>
+                    [% ELSE %]
+                        <audio controls> <!-- see  preload="metadata" attr? -->
+                          <source src="[% uri_for( path => "/download-recording", sha256 => recording.sha256) %]" />
+                        </audio>
+                    [% END %]
                 </div>
-                <div class="updated-date">Updated: [% recording.date_updated %]</div>
+                <div class="updated-date">Updated: [% recording.date_updated | html %]</div>
             </div>
             [% IF recording.description %]
                 <div class="description rounded-card">
@@ -155,19 +193,66 @@ alert("Sorry, not yet implemented.\n" +
                     <div>[% key | html %]</div>
                     <div>Tune Name: [% recording.tune_name | html %]</div>
                     <div>[% recording.tune_composer | html %] [% IF recording.tune_composed_year %]([% recording.tune_composed_year | html %])[% END %]</div>
-                    <div>Found in: [% recording.tune_found_in | html %]</div>
+                    [% IF recording.tune_found_in %]
+                        <div>Found in: [% recording.tune_found_in | html %]</div>
+                    [% END %]
+                    [% IF recording.tune_times_through %]
+                        <div>Times played through: [% recording.tune_times_through | html %]</div>
+                    [% END %]
+                    [% IF recording.tune_played_structure %]
+                        <div>Structure as played: [% recording.tune_played_structure | html %]</div>
+                    [% END %]
+                    [% IF recording.copyright_notes %]
+                        <div>Tune copyright: [% recording.copyright_notes | html %]</div>
+                    [% END %]
                 </div>
             [% END %]
             [% IF recording.dance_name || recording.dance_composer || recording.dance_found_in || recording.dance_instructions %]
                 <div class="dance-details rounded-card">
                     <div>Dance Name: [% recording.dance_name | html %]</div>
                     <div>[% recording.dance_composer | html %] [% IF recording.tune_composed_year %]([% recording.dance_composed_year | html %])[% END %]</div>
-                    <div>Found in: [% recording.dance_found_in | html %]</div>
+                    [% IF recording.dance_found_in %]
+                        <div>Found in: [% recording.dance_found_in | html %]</div>
+                    [% END %]
                     [% IF recording.dance_instructions %]
-                        <button class="show-instructions-button" type="button" onclick="showDanceInstructions([% recording.id %],'[% recording.title | html %]')">Dance<br>Instructions</button>
+                        [% IF is_mgmt %]
+                            <div class=show-instructions-button">
+                                Has dance instructions, will show button
+                            </div>
+                        [% ELSE %]
+                            <button class="show-instructions-button" type="button" onclick="showDanceInstructions([% recording.id %],'[% recording.title | html %]')">Dance<br>Instructions</button>
+                        [% END %]
                     [% END %]
                 </div>
             [% END %]
         </div>
     [% END %]
 </div>
+
+
+<script>
+// why at end? https://stackoverflow.com/a/9899701
+
+function showDanceInstructions (id, name) {
+alert("Sorry, not yet implemented.\n" +
+ "But here I'd show the dance instructions for " + name +
+ " in an overlay window");
+
+}
+[% IF is_mgmt %]
+
+function captureRowClick(e, mgmtUrl) {
+    event.preventDefault();
+    window.location.href=mgmtUrl;
+}
+
+var elems = document.getElementsByClassName("recording-row");
+
+for (let elem of elems) {
+    const mgmtUrl = elem.getAttribute('data-mgmt-url');
+    // capturing events on the way down https://javascript.info/bubbling-and-capturing
+    elem.addEventListener("click", e => captureRowClick(e, mgmtUrl), true);
+}
+
+</script>
+[% END %]
