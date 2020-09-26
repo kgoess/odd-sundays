@@ -24,7 +24,7 @@
 /* stuff from main-html */
 body {
     max-width: 1200px;
-    padding: 40px;
+    margin-left: 40px;
 }
 
 .rounded-card {
