@@ -68,7 +68,7 @@ sub handler {
         my $err = $@;
 
         $r->content_type('text/plain');
-        $r->print("Oops! The server encountered an error:\n\n$err");
+        $r->print("Oops! The server encountered an error:\n\n$err\n\nUse the back button to change stuff and try again.");
         return Apache2::Const::OK;
 
     };
