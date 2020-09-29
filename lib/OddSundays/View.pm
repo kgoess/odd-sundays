@@ -45,7 +45,7 @@ sub list_recordings {
         \%p,
         is_mgmt => $p{is_mgmt},
         message => $p{message},
-        page_title => 'Download Page',
+        page_title => ($p{is_mgmt} ? 'Management Page' : 'Download Page'),
         recordings => \@recordings,
     );
     my $output = '';
