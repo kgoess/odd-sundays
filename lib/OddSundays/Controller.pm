@@ -22,6 +22,7 @@ my %handler_for_path = (
     ''                         => sub { shift->main_page(@_) },
     '/'                        => sub { shift->main_page(@_) },
     '/download-recording'      => sub { shift->download_recording(@_) },
+    "/show-dance-instructions" => sub { shift->show_dance_instructions(@_) },
     "$manage/upload-recording" => sub { shift->upload_recording(@_) },
     "$manage/edit-recording"   => sub { shift->edit_recording(@_) },
     "$manage/list-recordings"  => sub { shift->list_recordings_for_edit(@_) },
@@ -304,8 +305,22 @@ sub download_recording {
     };
 }
 
+sub show_dance_instructions {
+    my ($class, %p) = @_;
 
+    my $id = scalar($p{request}->param('id'))
+          or die "missing id";
 
-#
+    my $recording = OddSundays::Model::Recording->load($id)
+        or die "can't find recording for id '$id'";
+
+    return {
+        action => "display",
+        content => OddSundays::View->show_dance_instructions(
+            message => scalar($p{request}->param('message')),
+            recording => $recording,
+        ),
+    }
+}
 
 1;

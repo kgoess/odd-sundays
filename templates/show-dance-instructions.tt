@@ -1,0 +1,14 @@
+
+<style>
+#site-title {
+    font-size: 150%;
+}
+</style>
+
+<h2>[% recording.title %]</h2>
+
+<pre>
+
+[% recording.dance_instructions | html %]
+
+</pre>

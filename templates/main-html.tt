@@ -8,10 +8,12 @@ body {
 
 [% IF ! is_mgmt %]
 <script>
-function showDanceInstructions (id, name) {
-alert("Sorry, not yet implemented.\n" +
- "But here I'd show the dance instructions for " + name +
- " in an overlay window");
+function showDanceInstructions (id, title) {
+    window.open(
+        '[% uri_for( path => "/show-dance-instructions" ) %]?id=' + id,
+        '_blank',
+        'height=600,width=500'
+    );
 }
 </script>
 [% END %]
@@ -134,7 +136,7 @@ alert("Sorry, not yet implemented.\n" +
                                 Has dance instructions, will show button
                             </div>
                         [% ELSE %]
-                            <button class="show-instructions-button" type="button" onclick="showDanceInstructions([% recording.id %],'[% recording.title | html %]')">Dance<br>Instructions</button>
+                            <button class="show-instructions-button" type="button" onclick="showDanceInstructions([% recording.id | html %],'[% recording.title | html %]')">Dance<br>Instructions</button>
                         [% END %]
                     [% END %]
                 </div>
