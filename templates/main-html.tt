@@ -8,7 +8,7 @@ body {
 
 [% IF ! is_mgmt %]
 <script>
-function showDanceInstructions (id, title) {
+function showDanceInstructions (id) {
     window.open(
         '[% uri_for( path => "/show-dance-instructions" ) %]?id=' + id,
         '_blank',
@@ -121,8 +121,8 @@ function showDanceInstructions (id, title) {
                     [% IF recording.tune_played_structure %]
                         <div>Structure as played: [% recording.tune_played_structure | html %]</div>
                     [% END %]
-                    [% IF recording.copyright_notes %]
-                        <div>Tune copyright: [% recording.copyright_notes | html %]</div>
+                    [% IF recording.tune_copyright_notes %]
+                        <div>Tune copyright: [% recording.tune_copyright_notes | html %]</div>
                     [% END %]
                 </div>
             [% END %]
@@ -139,7 +139,7 @@ function showDanceInstructions (id, title) {
                                 Has dance instructions, will show button
                             </div>
                         [% ELSE %]
-                            <button class="show-instructions-button" type="button" onclick="showDanceInstructions([% recording.id | html %],'[% recording.title | html %]')">Dance<br>Instructions</button>
+                            <button class="show-instructions-button" type="button" onclick="showDanceInstructions([% recording.id | html %])">Dance<br>Instructions</button>
                         [% END %]
                     [% END %]
                 </div>

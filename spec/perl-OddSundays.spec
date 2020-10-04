@@ -10,8 +10,10 @@
 # /home/kevin/perl5/bin/cpantorpm --spec-only /home/kevin/git/odd-sundays/OddSundays-0.01.tar.gz
 #
 
+%define appver 0.04
+
 Name:           perl-OddSundays
-Version:        0.02
+Version:        %appver
 Release:        1%{?dist}
 Summary:        unknown
 License:        GPL+ or Artistic
@@ -31,7 +33,7 @@ AutoReqProv:    no
 AutoReq:        no
 AutoProv:       no
 
-Provides:       perl(OddSundays) = 0.02
+Provides:       perl(OddSundays) = %appver
 Provides:       perl(OddSundays::Controller)
 Provides:       perl(OddSundays::Controller::ModPerl)
 Provides:       perl(OddSundays::Model::Recording)
@@ -57,7 +59,7 @@ webapp to handle recordings for the Odd Sundays project
 %prep
 
 rm -rf %{_builddir}/OddSundays-%{version}
-%setup -D -n OddSundays-0.01
+%setup -D -n OddSundays-%{appver}
 chmod -R u+w %{_builddir}/OddSundays-%{version}
 mkdir -p %{buildroot}/usr/local/odd-sundays/templates
 

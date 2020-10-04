@@ -265,7 +265,7 @@ sub edit_recording {
             $recording->$f( scalar($p{request}->param($f)) );
         }
         my $deleted = scalar($p{request}->param('deleted'));
-        if ($deleted eq 'on') {
+        if (($deleted//'') eq 'on') {
             $recording->deleted(1);
         } else {
             $recording->deleted(0);
