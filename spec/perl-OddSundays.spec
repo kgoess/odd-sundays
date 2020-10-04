@@ -39,16 +39,16 @@ Provides:       perl(OddSundays::Utils) = 0.01
 Provides:       perl(OddSundays::View) = 0.01
 BuildRequires:  perl(ExtUtils::MakeMaker)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
-Requires: mod_perl-2.0.11
-Requires: perl(CGI::Cookie)
-Requires: perl(Class::Accessor::Lite)
-Requires: perl(Data::Dump)
-Requires: perl(DateTime)
-Requires: perl(DBD::SQLite)
-Requires: perl(DBI)
-Requires: perl(Digest::SHA)
-Requires: perl(File::Temp)
-Requires: perl(Template)
+Requires: mod_perl => 2.0.11
+Requires: perl(CGI::Cookie) => 1.30
+Requires: perl(Class::Accessor::Lite) => 0.05
+Requires: perl(Data::Dump) => 1.22
+Requires: perl(DateTime) => 1.04
+Requires: perl(DBD::SQLite) => 1.39
+Requires: perl(DBI) => 1.627
+Requires: perl(Digest::SHA) => 5.85
+Requires: perl(File::Temp) => 0.2301
+Requires: perl(Template) => 2.24
 Requires: perl(Text::Wrap)
 
 %description
@@ -91,11 +91,11 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 # 1. templates/ directory
 mkdir -p %{buildroot}/usr/local/odd-sundays/templates
-cp -r %{_builddir}/OddSundays-%{version}/templates %{buildroot}/usr/local/odd-sundays/templates
+cp -r %{_builddir}/OddSundays-%{version}/templates/* %{buildroot}/usr/local/odd-sundays/templates/
 
 # 2. static files directory
-mkdir -p %{buildroot}/var/www/html/odd-sundays-static/
-cp -r %{_builddir}/OddSundays-%{version}/static %{buildroot}/var/www/html/odd-sundays-static/
+mkdir -p %{buildroot}/var/www/bacds.org/public_html/odd-sundays-static/
+cp -r %{_builddir}/OddSundays-%{version}/static/* %{buildroot}/var/www/bacds.org/public_html/odd-sundays-static/
 
 # 3. sqlite and uploaded files
 mkdir -p %{buildroot}/var/lib/odd-sundays/uploads
@@ -113,7 +113,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 # the other but of customized for our install:
 /usr/local/odd-sundays/templates/
-/var/www/html/odd-sundays-static/
+/var/www/bacds.org/public_html/odd-sundays-static/
 %attr(755, root, root) %dir /var/lib/odd-sundays
 %attr(755, apache, apache) %dir /var/lib/odd-sundays/uploads
 %attr(755, apache, apache) %dir /var/lib/odd-sundays/db

@@ -1,15 +1,57 @@
 kg-OddSundays version 0.01
 ============================
 
+This is a little webapp to serve and manage the recordings
+for the Odd Sundays project.
 
-INSTALLATION
+INSTALL:
 
-To install this module type the following:
+1. You should install it using the RPM. To make an rpm, run "./script/build-rpm.sh".
+Then do "sudo rpm -Uvh /path/to/rpm"
 
-   perl Makefile.PL
-   make
-   make test
-   make install
+2. Then you'll need to set up the handler in the apache config, like this:
+
+    <Location /odd-sundays>
+        PerlSetEnv SQLITE_FILE /var/lib/odd-sundays/db/odd-sundays.sqlite
+        PerlSetEnv TT_INCLUDE_PATH /usr/local/odd-sundays/templates
+        PerlSetEnv UPLOAD_DIR /var/lib/odd-sundays/uploads
+        PerlSetEnv URI_BASE /odd-sundays
+        PerlSetEnv STATIC_URI_BASE /odd-sundays-static
+        PerlSetEnv MGMT_URI_KEY xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+               # any random string will do, but "uuidgen" is your friend
+
+        SetHandler perl-script
+        PerlHandler OddSundays::Controller::ModPerl
+    </Location>
+
+3. To create the sqlite database, run this
+
+    sudo sh -c 'UPLOAD_DIR=/var/lib/odd-sundays/uploads/ 
+                SQLITE_FILE=/var/lib/odd-sundays/db/odd-sundays.sqlite 
+                ./script/odd-sundays-create-tables.pl'
+
+4. The users can browse the files at:
+
+    https://www.bacds.org/odd-sundays
+
+and admins can upload and edit data at:
+
+    https://www.bacds.org/odd-sundays/manage/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/
+
+I didn't bother to set up usernames/passwords. That unguessable url is a "password".
+It can be changed at will.
+
+5. If you need to hack on the code, you can see where the files are by doing
+
+    $ rpm -ql perl-OddSundays
+    /usr/local/odd-sundays/templates
+    /usr/local/odd-sundays/templates/footer.tt
+    /usr/local/odd-sundays/templates/header.tt
+    /usr/local/odd-sundays/templates/main-html.tt
+    ...etc...
+
+but please do the rpm route described in step #1 above, and send pull requests
+to the github repo at https://github.com/kgoess/odd-sundays.
 
 
 COPYRIGHT AND LICENCE
