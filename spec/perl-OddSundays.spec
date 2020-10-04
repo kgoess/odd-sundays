@@ -11,7 +11,7 @@
 #
 
 Name:           perl-OddSundays
-Version:        0.01
+Version:        0.02
 Release:        1%{?dist}
 Summary:        unknown
 License:        GPL+ or Artistic
@@ -31,12 +31,12 @@ AutoReqProv:    no
 AutoReq:        no
 AutoProv:       no
 
-Provides:       perl(OddSundays) = 0.01
-Provides:       perl(OddSundays::Controller) = 0.01
-Provides:       perl(OddSundays::Controller::ModPerl) = 0.01
-Provides:       perl(OddSundays::Model::Recording) = 0.01
-Provides:       perl(OddSundays::Utils) = 0.01
-Provides:       perl(OddSundays::View) = 0.01
+Provides:       perl(OddSundays) = 0.02
+Provides:       perl(OddSundays::Controller)
+Provides:       perl(OddSundays::Controller::ModPerl)
+Provides:       perl(OddSundays::Model::Recording)
+Provides:       perl(OddSundays::Utils)
+Provides:       perl(OddSundays::View)
 BuildRequires:  perl(ExtUtils::MakeMaker)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 Requires: mod_perl => 2.0.11
