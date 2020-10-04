@@ -6,8 +6,10 @@ for the Odd Sundays project.
 
 INSTALL:
 
-1. You should install it using the RPM. To make an rpm, run "./script/build-rpm.sh".
-Then do "sudo rpm -Uvh /path/to/rpm"
+1. You should install it using the RPM. To make an rpm:
+ a. bump the version in lib/OddSundays.rpm and spec/perl-OddSundays.spec
+ b. run "./script/build-rpm.sh".
+ c. then do "sudo rpm -Uvh /path/to/rpm"
 
 2. Then you'll need to set up the handler in the apache config, like this:
 
