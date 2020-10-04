@@ -20,6 +20,11 @@ function showDanceInstructions (id, title) {
 
 [% IF is_mgmt %]
 <h1>This is the Management Page</h1>
+<div>
+    <button class="upload-button" onclick="window.location.href='[% manage_uri_for( path => "/upload-recording" ) %]'">
+        Upload A New Recording
+    </button>
+</div>
 [% ELSE %]
 <div class="site-blurb">
     <div>
@@ -29,14 +34,17 @@ function showDanceInstructions (id, title) {
     </div>
     <div>
     Production of these <span class="project-name">Odd Sundays</span>
-    recordings was funded by the <a href="https://www.bacds.org"> Bay Area Country
-    Dance Society</a> and is provided here for your enjoyment under the <a
+    recordings was funded in part by the <a href="https://www.bacds.org"> Bay Area Country
+    Dance Society</a>. They are provided here for your enjoyment under the <a
     href="https://creativecommons.org/licenses/by-sa/4.0/">Attribution-ShareAlike</a>
     license.
     </div>
 </div>
-<hr>
+
+
 [% END %]
+<div style="clear: both;"></div>
+<hr>
 
 [% IF message %]
     <div class="message">
@@ -45,11 +53,6 @@ function showDanceInstructions (id, title) {
 [% END %]
 
 [% IF is_mgmt %]
-<div>
-    <button class="upload-button" onclick="window.location.href='[% manage_uri_for( path => "/upload-recording" ) %]'">
-        Upload A New Recording
-    </button>
-</div>
 <div class="instructions">
     <ul>
         <li>Click on a row to edit that recording

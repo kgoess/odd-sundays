@@ -7,6 +7,7 @@ use Carp qw/croak/;
 use CGI::Cookie;
 use Data::Dump qw/dump/;
 use Digest::SHA qw/sha256_hex/;
+use Text::Wrap;
 
 #use OddSundays::Logger;
 #use OddSundays::Model::Event;
@@ -25,6 +26,7 @@ my %handler_for_path = (
     "/show-dance-instructions" => sub { shift->show_dance_instructions(@_) },
     "$manage/upload-recording" => sub { shift->upload_recording(@_) },
     "$manage/edit-recording"   => sub { shift->edit_recording(@_) },
+    "$manage/"                 => sub { shift->list_recordings_for_edit(@_) },
     "$manage/list-recordings"  => sub { shift->list_recordings_for_edit(@_) },
 );
 
@@ -87,7 +89,6 @@ sub upload_recording {
         my $upload_info = handle_upload($upload);
 
         my $title       = scalar($p{request}->param('title'));
-        my $description = scalar($p{request}->param('description'));
 
         my $filename_for_download = 
             scalar($p{request}->param('filename_for_download'));
@@ -108,7 +109,7 @@ sub upload_recording {
         $recording->orig_filename($upload_info->{filename});
 
         $recording->filename_for_download($filename_for_download);
-        $recording->description($description);
+        $recording->description(wrap_text(scalar($p{request}->param('description'))));
         foreach my $f (qw/
             album
             track_num
@@ -238,9 +239,10 @@ sub edit_recording {
             $recording->orig_filename($upload_info->{filename});
         }
 
+        $recording->description(wrap_text(scalar($p{request}->param('description'))));
+
         foreach my $f (qw/
             title
-            description
             filename_for_download
             album
             track_num
@@ -285,6 +287,20 @@ sub edit_recording {
     } else {
         die "unrecognized method $p{method} in call to edit_recording";
     }
+}
+
+sub wrap_text {
+    my $s = shift;
+
+   $Text::Wrap::columns = 50;
+
+    my @lines = split /\r?\n/, $s;
+    foreach (@lines) {
+        next unless length > 50;
+        $_ = wrap('', '', $_);
+    }
+    dump \@lines;
+    return join "\n", @lines;
 }
 
 sub download_recording {

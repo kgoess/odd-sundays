@@ -45,9 +45,11 @@ more current: <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jq
 <body>
 
 <div id="page-header">
+    <div id="site-logo">
+        <img class="site-logo-big" src="[% static_uri_for('kokopeli.png') %]" alt="kokopeli" height="200px">
+        <img class="site-logo-small" src="[% static_uri_for('kokopeli.png') %]" alt="kokopeli" height="100px">
+    </div>
     <div id="site-title">
         <a href="[% uri_for( path => '/' ) %]">Odd Sundays Recordings</a>
-    </div>
-    <div id="page-header-clear">
     </div>
 </div>

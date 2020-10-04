@@ -1,8 +1,33 @@
+h1 {
+    margin-left: 10px;
 
+}
 #site-title {
     font-family: 'Indie Flower', cursive;
     font-size: 300%;
-    margin: 25px;
+    margin: 40px;
+}
+#site-logo { /* kokopelli */
+    float: right;
+    margin: 20px;
+}
+.site-logo-small {
+  display: none;
+}
+@media only screen and (max-width: 600px) {
+  #site-logo {
+      margin: 2px;
+  }
+  #site-title {
+      font-size: 200%;
+      margin: 10px;
+  }
+  .site-logo-big {
+      display: none;
+  }
+  .site-logo-small {
+      display: inline-block;
+  }
 }
 
 .project-name {
@@ -15,6 +40,7 @@
     padding: 25px;
     border-radius: 25px;
     max-width: 800px;
+    float: left;
 }
 
 .site-blurb div {
@@ -23,7 +49,7 @@
 
 /* stuff from main-html */
 body {
-    max-width: 1200px;
+    max-width: 1600px;
     margin-left: 40px;
 }
 
@@ -52,7 +78,10 @@ body {
 }
 .recording-row {
     border: 1px solid black;
-    display: flex;
+    /* https://stackoverflow.com/questions/50068078/how-to-prevent-flex-items-from-overflowing-flex-parent-with-no-wrap */
+    display: inline-flex;
+    flex-wrap: wrap;
+    min-width: 100%;
 }
 
 .recording-row:hover {

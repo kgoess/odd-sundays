@@ -1,7 +1,11 @@
-<style>
 
-</style>
+[% IF is_edit %]
+    <h1>Editing “[% recording.title %]”</h1>
+[% ELSE %]
+    <h1>Upload a Recording</h1>
+[% END %]
 
+<div style="clear: both;"></div> <!-- wrong, leaves too much space, FIXME -->
 [% IF message %]
     <div class="message" >
         [% message | html %]
