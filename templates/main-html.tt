@@ -100,7 +100,7 @@ function showDanceInstructions (id) {
                         </audio>
                     [% END %]
                 </div>
-                <div class="updated-date">[% IF recording.deleted %]Deleted: [% ELSE %]Updated: [% END %][% recording.date_updated | html %]</div>
+                <div class="updated-date">[% IF recording.deleted %]Deleted/hidden: [% ELSE %]Updated: [% END %][% recording.date_updated | html %]</div>
             </div>
             [% IF recording.description %]
                 <div class="description rounded-card">
