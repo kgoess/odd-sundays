@@ -9,10 +9,6 @@ use Data::Dump qw/dump/;
 use Digest::SHA qw/sha256_hex/;
 use Text::Wrap;
 
-#use OddSundays::Logger;
-#use OddSundays::Model::Event;
-#use OddSundays::Model::Person;
-#use OddSundays::Model::PersonEventMap;
 use OddSundays::Model::Recording;
 use OddSundays::Utils qw/today_ymdhms/;
 
