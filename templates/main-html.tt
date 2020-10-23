@@ -28,8 +28,9 @@ function showDanceInstructions (id) {
 [% ELSE %]
 <div class="site-blurb">
     <div>
-    This is music recorded by the Judy Linsenberg, Shira Kammen and Patti Cobb
-    for the <span class="project-name">Odd Sundays English Dance</span> run by
+    This is music recorded by the Odd Sundays Garage Band&mdash;Judy Linsenberg, 
+    Shira Kammen and Patti Cobb&mdash;for the
+     <span class="project-name">Odd Sundays English Dance</span> run by
     Sharon Green and Kalia Kliban.
     </div>
     <div>
