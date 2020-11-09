@@ -7,7 +7,7 @@ for the Odd Sundays project.
 INSTALL:
 
 1. You should install it using the RPM. To make an rpm:
- a. bump the version in lib/OddSundays.rpm and spec/perl-OddSundays.spec
+ a. bump the version in lib/OddSundays.pm and spec/perl-OddSundays.spec
  b. run "./script/build-rpm.sh".
  c. then do "sudo rpm -Uvh /path/to/rpm"
 

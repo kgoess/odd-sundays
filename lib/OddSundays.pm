@@ -3,4 +3,4 @@ package OddSundays;
 use strict;
 use warnings;
 
-our $VERSION=0.06;
+our $VERSION=0.07;
