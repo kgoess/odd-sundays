@@ -91,6 +91,11 @@ body {
 .tune-details {
 }
 
+/* keep long copyright line from being ridiculous */
+div.tune-details div {
+    max-width: 250px;
+}
+
 
 .recording-header {
 }
