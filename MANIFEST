@@ -12,6 +12,7 @@ script/odd-sundays-create-tables.pl
 static/download-icon.png
 static/kokopeli.png
 static/styles.css
+static/odd-sundays.js
 t/kg-OddSundays.t
 templates/footer.tt
 templates/header.tt

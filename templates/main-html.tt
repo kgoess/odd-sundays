@@ -62,9 +62,19 @@ function showDanceInstructions (id) {
 [% END %]
 
 
+<div class="sort-control">
+    Sort by:
+    <!-- I'd really like to style this better some day -->
+    <select id="sort-control">
+        <option name="title">Title</option>
+        <option name="updated-date">Recently updated</option>
+    </select>
+
+</div>
+
 <div class="recording-list">
     [% FOR recording IN recordings %]
-        <div class="recording-row" [% IF is_mgmt %]data-mgmt-url="[% manage_uri_for( path => '/edit-recording', id => recording.id) %]"[% END %]>
+        <div class="recording-row" [% IF is_mgmt %]data-mgmt-url="[% manage_uri_for( path => '/edit-recording', id => recording.id) %]"[% END %] sort-recording-title="[% recording.title | uri %]" sort-updated-date="[% recording.date_updated | uri %]">
             <div class="recording-header">
                 <div class="recording-header-title">
                     <div class="recording-title [% IF recording.deleted %]recording-deleted[% END %]">

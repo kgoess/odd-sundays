@@ -186,4 +186,7 @@ form div {
     padding: 10px;
 }
 
-
+/* I'd really like to style this better someday */
+.sort-control {
+    padding: 10px;
+}
