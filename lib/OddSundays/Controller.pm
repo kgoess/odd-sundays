@@ -391,7 +391,7 @@ sub add_log {
 
         $user && $message && length($recording_id) > 0 || die "missing params";
 
-        my $rec = OddSundays::Model::Recording->load($recording_id)
+        my $rec = OddSundays::Model::Recording->load($recording_id, include_deleted => 1)
             or die "no recording found for id $recording_id";
 
         my $log = OddSundays::Model::Log->new(
