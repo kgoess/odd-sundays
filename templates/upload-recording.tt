@@ -1,6 +1,11 @@
 
 [% IF is_edit %]
-    <h1>Editing “[% recording.title %]”</h1>
+    <div class="h1-title">
+        <h1>Editing “[% recording.title %]”</h1>
+        <div class="h1-rightbox">
+            <a href="[% manage_uri_for( path => "/" ) %]">return to management list</a>
+        </div>
+    </div>
 [% ELSE %]
     <h1>Upload a Recording</h1>
 [% END %]
@@ -104,18 +109,20 @@
         Deleted (hidden from users): <input type="checkbox" name="deleted" [% IF recording.deleted %]checked[% END %]>
     </div>
     <div>
-        <input type="submit">
+        <button type="submit" class="submit-button">Save</button>
+        <a class="cancel-button" href="[% manage_uri_for( path => '/' ) %]">Cancel</a>
     </div>
 </form>
 
 <div style="clear: both;"></div>
 <hr>
+<h2>Log of activity for this recording:</h2>
 <form method="POST" action="[% manage_uri_for( path => "/add-log" ) %]">
-Add a log message:<br>
+Add a log message:
     <input name="user" type="text" value="your name" class="logflipper" data-prompt="your name" data-secondprompt="who now?">
     <input name="message" type="text" value="what you say?" class="logflipper" data-prompt="what you say?" data-secondprompt="yes, what?">
     <input type="hidden" name="recording-id" value="[% recording.id %]">
-    <input type="submit">
+    <input type="submit" value="log it">
 </form>
 <table class="logs">
     <tr>
