@@ -60,4 +60,24 @@ $(document).ready(function(){
         
     sortRows(listContainer, sortType);
   });
+
+    $(".logflipper").on("focusin", function(e) {
+        var el = e.target;
+        if (el.value === el.getAttribute('data-prompt') ||
+            el.value === el.getAttribute('data-secondprompt')
+        ) {
+
+            el.value = '';
+        }
+    });
+    $(".logflipper").on('blur', function(e) {
+        var el = e.target;
+        if (el.value === '') {
+            // el.setAttribute('value', el.getAttribute('data-secondprompt'));
+            el.value = el.getAttribute('data-secondprompt');
+        }
+    });
+    $(".logflipper").on('input', function(e) {
+        var el = e.target;
+    });
 });

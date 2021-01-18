@@ -40,6 +40,7 @@ Provides:       perl(OddSundays::Model::Recording)
 Provides:       perl(OddSundays::Utils)
 Provides:       perl(OddSundays::View)
 BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(Test::Exception)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 Requires: mod_perl => 2.0.11
 Requires: perl(CGI::Cookie) => 1.30
@@ -50,6 +51,7 @@ Requires: perl(DBD::SQLite) => 1.39
 Requires: perl(DBI) => 1.627
 Requires: perl(Digest::SHA) => 5.85
 Requires: perl(File::Temp) => 0.2301
+Requires: perl(Storable)
 Requires: perl(Template) => 2.24
 Requires: perl(Text::Wrap)
 

@@ -11,6 +11,7 @@ use Exporter 'import';
 our @EXPORT_OK = qw(
     clone
     get_dbh
+    now_iso8601
     today_ymd
     tomorrow_ymd
     yesterday_ymd
@@ -51,6 +52,12 @@ sub tomorrow_ymd {
             ->now
             ->add( days => 1 )
             ->ymd;
+}
+
+sub now_iso8601 {
+    return DateTime
+        ->now(time_zone => "US/Pacific")
+        ->strftime("%Y-%m-%dT%H:%M:%S%z")
 }
 
 sub date_format_pretty {

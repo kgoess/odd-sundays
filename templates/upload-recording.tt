@@ -107,3 +107,27 @@
         <input type="submit">
     </div>
 </form>
+
+<div style="clear: both;"></div>
+<hr>
+<form method="POST" action="[% manage_uri_for( path => "/add-log" ) %]">
+Add a log message:<br>
+    <input name="user" type="text" value="your name" class="logflipper" data-prompt="your name" data-secondprompt="who now?">
+    <input name="message" type="text" value="what you say?" class="logflipper" data-prompt="what you say?" data-secondprompt="yes, what?">
+    <input type="hidden" name="recording-id" value="[% recording.id %]">
+    <input type="submit">
+</form>
+<table class="logs">
+    <tr>
+        <th>Date</td>
+        <th>User</td>
+        <th>Message</td>
+    </tr>
+[% FOR log IN logs %]
+    <tr [% IF log.user == 'auto'%]class='auto-log'[% END %] >
+        <td style="white-space: nowrap">[% log.shortdate | html %]</td>
+        <td>[% log.user | html %]</td>
+        <td>[% log.message | html  %]</td>
+    </tr>
+[% END %]
+</table>

@@ -30,7 +30,7 @@ use Apache2::Upload; # loads ->upload
 use Apache2::Const -compile => qw/:common :http/;
 use Apache2::Request;
 
-use OddSundays::Controller __PACKAGE__;
+use OddSundays::Controller controller_class => __PACKAGE__;
 use OddSundays::View __PACKAGE__;
 
 sub handler {

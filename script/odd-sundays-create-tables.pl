@@ -8,6 +8,7 @@ use Data::Dump qw/dump/;
 use DateTime;
 
 use OddSundays::Model::Recording;
+use OddSundays::Model::Log;
 
 die "set SQLITE_FILE first" unless $ENV{SQLITE_FILE};
 
@@ -20,4 +21,5 @@ close $truncate;
 # https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/security-enhanced_linux/sect-security-enhanced_linux-working_with_selinux-selinux_contexts_labeling_files
 
 OddSundays::Model::Recording->create_table;
+OddSundays::Model::Log->create_table;
 

@@ -43,7 +43,10 @@ use Class::Accessor::Lite(
     ],
 );
 
-my $Upload_Dir = $ENV{UPLOAD_DIR} or die "missing UPLOAD_DIR in env";
+sub upload_dir {
+    my $upload_dir = $ENV{UPLOAD_DIR} or die "missing UPLOAD_DIR in env";
+    return $upload_dir;
+}
 
 
 sub save {
@@ -276,11 +279,7 @@ sub file_path {
     my ($self) = @_;
     my $id = $self->sha256;
 
-    return "$Upload_Dir/$id.mp3";
-}
-
-sub upload_dir {
-    return $Upload_Dir;
+    return upload_dir()."/$id.mp3";
 }
 
 sub create_table {

@@ -190,3 +190,14 @@ form div {
 .sort-control {
     padding: 10px;
 }
+
+.logs th,td {
+    border: 1px solid black;
+    padding: 5px;
+    margin: 15px;
+}
+.logs .auto-log {
+    color: gray;
+    font-size: 90%;
+    font-style: italic;
+}

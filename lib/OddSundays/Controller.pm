@@ -1,59 +1,74 @@
 package OddSundays::Controller;
 
 use strict;
+use feature 'state';
 use warnings;
 
 use Carp qw/croak/;
 use CGI::Cookie;
 use Data::Dump qw/dump/;
 use Digest::SHA qw/sha256_hex/;
+use Storable qw/dclone/;
 use Text::Wrap;
 
 use OddSundays::Model::Recording;
+use OddSundays::Model::Log;
 use OddSundays::Utils qw/today_ymdhms/;
 
-my $manage_key = $ENV{MGMT_URI_KEY} or die "MGMT_URI_KEY is unset in ENV";
-my $manage = "/manage/$manage_key";
-
-my %handler_for_path = (
-    ''                         => sub { shift->main_page(@_) },
-    '/'                        => sub { shift->main_page(@_) },
-    '/download-recording'      => sub { shift->download_recording(@_) },
-    "/show-dance-instructions" => sub { shift->show_dance_instructions(@_) },
-    "$manage/upload-recording" => sub { shift->upload_recording(@_) },
-    "$manage/edit-recording"   => sub { shift->edit_recording(@_) },
-    "$manage/"                 => sub { shift->list_recordings_for_edit(@_) },
-    "$manage/list-recordings"  => sub { shift->list_recordings_for_edit(@_) },
-);
-
-sub go {
-    my ($class, %p) = @_;
-
-    if (my $handler = $handler_for_path{ $p{path_info} }) {
-        return $handler->($class, %p),
-    } else {
-        die "missing handler for '$p{path_info}'";
-    }
-}
-
+my $TEST_MGMT_URI_KEY;
 # when either OddSundays::Controller::ModPerl or Goc::Controller::CGI loads
 # this module, Perl calls this import() function and we set the location
 # of the uri_for implementation
 sub import {
-    my ($class, $location) = @_;
+    my ($class, %args) = @_;
 
-    return unless $location;
+    if (my $key = $args{MGMT_URI_KEY}) {
+        $TEST_MGMT_URI_KEY = $key;
+    }
 
-    no warnings 'redefine';
+    if (my $location = $args{controller_class}) {
 
-#    my $uri_for_implementation = join '::', $location, 'uri_for';
-#    *uri_for = \&{$uri_for_implementation};
-#
-#    my $static_uri_for_implementation = join '::', $location, 'static_uri_for';
-#    *static_uri_for = \&{$static_uri_for_implementation};
-#
-#    my $manage_uri_for_implementation = join '::', $location, 'manage_uri_for';
-#    *manage_uri_for = \&{$manage_uri_for_implementation};
+        no warnings 'redefine';
+    #    my $uri_for_implementation = join '::', $location, 'uri_for';
+    #    *uri_for = \&{$uri_for_implementation};
+    #
+    #    my $static_uri_for_implementation = join '::', $location, 'static_uri_for';
+    #    *static_uri_for = \&{$static_uri_for_implementation};
+    #
+    #    my $manage_uri_for_implementation = join '::', $location, 'manage_uri_for';
+    #    *manage_uri_for = \&{$manage_uri_for_implementation};
+    }
+}
+
+sub get_handler_for_path {
+    my ($path) = @_;
+
+    state $manage_key = $ENV{MGMT_URI_KEY} || $TEST_MGMT_URI_KEY or die "MGMT_URI_KEY is unset in ENV";
+    state $manage = "/manage/$manage_key";
+
+    state $handler_for_path = {
+        ''                         => sub { shift->main_page(@_) },
+        '/'                        => sub { shift->main_page(@_) },
+        '/download-recording'      => sub { shift->download_recording(@_) },
+        "/show-dance-instructions" => sub { shift->show_dance_instructions(@_) },
+        "$manage/upload-recording" => sub { shift->upload_recording(@_) },
+        "$manage/edit-recording"   => sub { shift->edit_recording(@_) },
+        "$manage/"                 => sub { shift->list_recordings_for_edit(@_) },
+        "$manage/list-recordings"  => sub { shift->list_recordings_for_edit(@_) },
+        "$manage/add-log"          => sub { shift->add_log(@_) },
+    };
+
+    return $handler_for_path->{$path};
+}
+
+sub go {
+    my ($class, %p) = @_;
+
+    if (my $handler = get_handler_for_path( $p{path_info} )) {
+        return $handler->($class, %p),
+    } else {
+        die "missing handler for '$p{path_info}'";
+    }
 }
 
 sub main_page {
@@ -135,6 +150,12 @@ sub upload_recording {
         }
 
         $recording->save;
+
+        OddSundays::Model::Log->new(
+            recording_id => $recording->id,
+            user => 'auto',
+            message => 'recording uploaded from '.$upload_info->{filename},
+        )->save;
 
         return {
             action => 'redirect',
@@ -227,15 +248,24 @@ sub edit_recording {
         my $recording = OddSundays::Model::Recording->load($id, include_deleted => 1)
             or die "no recording found for id '$id'";
 
+        my $orig = dclone($recording);
+
+        my @log_msg;
+
         if (my $upload = $p{request}->upload("recording")) {
             my $upload_info = handle_upload($upload);
             $recording->sha256       ($upload_info->{sha256});
             $recording->size         ($upload_info->{size});
             $recording->content_type ($upload_info->{content_type});
             $recording->orig_filename($upload_info->{filename});
+            push @log_msg, "upload from $upload_info->{filename}";
         }
 
         $recording->description(wrap_text(scalar($p{request}->param('description'))));
+
+        if ($recording->description ne $orig->description) {
+            push @log_msg, 'description changed';
+        }
 
         foreach my $f (qw/
             title
@@ -259,6 +289,9 @@ sub edit_recording {
             /
         ) {
             $recording->$f( scalar($p{request}->param($f)) );
+            if ($recording->$f ne $orig->$f) {
+                push @log_msg, "$f changed to ".$recording->$f;
+            }
         }
         my $deleted = scalar($p{request}->param('deleted'));
         if (($deleted//'') eq 'on') {
@@ -266,8 +299,17 @@ sub edit_recording {
         } else {
             $recording->deleted(0);
         }
+        if ($recording->deleted ne $orig->deleted) {
+            push @log_msg, 'deleted set to '. $recording->deleted;
+        }
 
         $recording->save;
+
+        OddSundays::Model::Log->new(
+            recording_id => $recording->id,
+            user => 'auto',
+            message => join(', ', @log_msg),
+        )->save;
 
         return {
             action => 'redirect',
@@ -332,6 +374,42 @@ sub show_dance_instructions {
             message => scalar($p{request}->param('message')),
             recording => $recording,
         ),
+    }
+}
+
+sub add_log {
+    my ($class, %p) = @_;
+
+    if ($p{method} eq 'GET') {
+        die "this endpoint doesn't do GET's, what are you on about?";
+
+    } elsif ($p{method} eq 'POST') {
+
+        my $user         = scalar($p{request}->param('user'));
+        my $message      = scalar($p{request}->param('message'));
+        my $recording_id = scalar($p{request}->param('recording-id'));
+
+        $user && $message && length($recording_id) > 0 || die "missing params";
+
+        my $rec = OddSundays::Model::Recording->load($recording_id)
+            or die "no recording found for id $recording_id";
+
+        my $log = OddSundays::Model::Log->new(
+            user => $user,
+            message => $message,
+            recording_id => $recording_id,
+        );
+        $log->save;
+        return {
+            action => 'redirect',
+            headers => {
+                Location  => $p{manage_uri_for}->(
+                    path    => "/edit-recording",
+                    message => "Your log message has been recorded.",
+                    id      => $recording_id,
+                ),
+            },
+        };
     }
 }
 

@@ -2,6 +2,7 @@ Changes
 lib/OddSundays.pm
 lib/OddSundays/Controller.pm
 lib/OddSundays/Controller/ModPerl.pm
+lib/OddSundays/Model/Log.pm
 lib/OddSundays/Model/Recording.pm
 lib/OddSundays/Utils.pm
 lib/OddSundays/View.pm
@@ -13,7 +14,8 @@ static/download-icon.png
 static/kokopeli.png
 static/styles.css
 static/odd-sundays.js
-t/kg-OddSundays.t
+t/01-basic.t
+t/02-controller.t
 templates/footer.tt
 templates/header.tt
 templates/main-html.tt

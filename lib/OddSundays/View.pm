@@ -79,6 +79,8 @@ sub edit_recording {
 
     my $tt = get_tt();
 
+    my @logs = OddSundays::Model::Log->get_logs_for_recording($p{recording}->id);
+
     my $template = 'upload-recording.tt';
     my $vars = get_vars(
         \%p,
@@ -86,6 +88,7 @@ sub edit_recording {
         page_title => 'Edit Recording',
         recording => $p{recording},
         is_edit => 1,
+        logs => \@logs,
     );
     my $output = '';
 
