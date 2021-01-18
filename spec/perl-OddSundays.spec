@@ -10,7 +10,7 @@
 # /home/kevin/perl5/bin/cpantorpm --spec-only /home/kevin/git/odd-sundays/OddSundays-0.01.tar.gz
 #
 
-%define appver 0.08
+%define appver 0.09
 
 Name:           perl-OddSundays
 Version:        %appver
