@@ -145,7 +145,6 @@ sub handler {
     }
 }
 
-# TODO need to worry about escaping here
 sub uri_for {
     my %p;
     if (ref $_[0] eq 'HASH') { # TT sends a hashref
