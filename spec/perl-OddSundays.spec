@@ -54,6 +54,7 @@ Requires: perl(File::Temp) => 0.2301
 Requires: perl(Storable)
 Requires: perl(Template) => 2.24
 Requires: perl(Text::Wrap)
+Requires: perl(URI::Escape)
 
 %description
 webapp to handle recordings for the Odd Sundays project

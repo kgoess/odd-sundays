@@ -29,6 +29,7 @@ use Apache2::RequestIO ();  # for print
 use Apache2::Upload; # loads ->upload
 use Apache2::Const -compile => qw/:common :http/;
 use Apache2::Request;
+use URI::Escape qw/uri_escape/;
 
 use OddSundays::Controller controller_class => __PACKAGE__;
 use OddSundays::View __PACKAGE__;
@@ -162,7 +163,7 @@ sub uri_for {
     my $url_params = '';
     if (keys %p) {
         $url_params = '?'; # will also be different for mod_perl
-        $url_params .= join '&', map { "$_=$p{$_}" } sort keys %p;
+        $url_params .= join '&', map { "$_=".uri_escape($p{$_}) } sort keys %p;
     }
 
     my $manage = $want_manage ? "/manage/$manage_key" : '';
