@@ -36,7 +36,10 @@ sub list_recordings {
 
     my @recordings = 
         sort { $a->title cmp $b->title }
-        OddSundays::Model::Recording->get_all($p{is_mgmt} ? ( include_deleted => 1) : ());
+        OddSundays::Model::Recording->get_all(
+            $p{is_mgmt} ? ( include_deleted => 1) : (),
+            $p{is_mgmt} ? () : (ok_to_publish => 1),
+        );
 
     my $tt = get_tt();
 

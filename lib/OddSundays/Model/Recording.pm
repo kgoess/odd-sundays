@@ -21,6 +21,7 @@ use Class::Accessor::Lite(
     'size',
     'content_type',
     'description',
+    'ok_to_publish',
     'album',
     'track_num',
     'track_of',
@@ -65,6 +66,7 @@ sub save {
         size,
         content_type,
         description,
+        ok_to_publish,
         album,
         track_num,
         track_of,
@@ -85,7 +87,7 @@ sub save {
         date_created,
         date_updated
     )
-    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
 EOL
 
     if (! $self->date_created) {
@@ -109,6 +111,7 @@ EOL
             size
             content_type
             description
+            ok_to_publish
             album
             track_num
             track_of
@@ -197,6 +200,7 @@ sub update {
             size = ?,
             content_type = ?,
             description = ?,
+            ok_to_publish = ?,
             album = ?,
             track_num = ?,
             track_of = ?,
@@ -231,6 +235,7 @@ EOL
             size
             content_type
             description
+            ok_to_publish
             album
             track_num
             track_of
@@ -261,8 +266,15 @@ sub get_all {
     SELECT * from recording
 EOL
 
+    my @wheres;
     if (!$p{include_deleted}) {
-        $sql .= ' WHERE deleted = 0 ';
+        push @wheres, 'deleted = 0';
+    }
+    if ($p{ok_to_publish}) {
+        push @wheres, 'ok_to_publish = 1';
+    }
+    if (@wheres) {
+        $sql .= ' WHERE '.join(' AND ', @wheres);
     }
 
     my @rc;
@@ -295,6 +307,7 @@ CREATE TABLE recording (
     size INT(255) default 0,
     content_type VARCHAR(255),
     description VARCHAR(4096),
+    ok_to_publish INTEGER,
     album VARCHAR(255),
     track_num VARCHAR(255),
     track_of VARCHAR(255),

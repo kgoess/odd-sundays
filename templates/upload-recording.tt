@@ -23,6 +23,7 @@
     </ul>
 </div>
 
+
 <form enctype="multipart/form-data" method="POST" 
 [% IF is_edit %]
     action="[% manage_uri_for( path => "/edit-recording" ) %]"
@@ -39,6 +40,13 @@
     </div>
     <div>
         Name: <input type="text" name="title" value="[% recording.title | html %]"> (required)
+    </div>
+    <div>
+        <label for="ok_to_publish">Ok to Publish: </label>
+        <select name="ok_to_publish" id="ok_to_publish">
+            <option value="1" [% IF recording.ok_to_publish %]selected[% END %]>yes</option>
+            <option value="0" [% IF ! recording.ok_to_publish %]selected[% END %]>no</option>
+        </select>
     </div>
     [% IF is_edit %]
     <div style="font-style: italic; font-size: 80%; margin-left: 15px; margin-bottom: 5px;">

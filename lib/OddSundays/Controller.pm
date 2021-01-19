@@ -122,6 +122,7 @@ sub upload_recording {
         $recording->filename_for_download($filename_for_download);
         $recording->description(wrap_text(scalar($p{request}->param('description'))));
         foreach my $f (qw/
+            ok_to_publish
             album
             track_num
             track_of
@@ -269,6 +270,7 @@ sub edit_recording {
 
         foreach my $f (qw/
             title
+            ok_to_publish
             filename_for_download
             album
             track_num
@@ -290,7 +292,11 @@ sub edit_recording {
         ) {
             $recording->$f( scalar($p{request}->param($f)) );
             if ($recording->$f ne $orig->$f) {
-                push @log_msg, "$f changed to ".$recording->$f;
+                if ($f eq 'dance_instructions') {
+                    push @log_msg, "$f changed";
+                } else {
+                    push @log_msg, "$f changed to '".$recording->$f."'";
+                }
             }
         }
         my $deleted = scalar($p{request}->param('deleted'));
@@ -305,11 +311,13 @@ sub edit_recording {
 
         $recording->save;
 
-        OddSundays::Model::Log->new(
-            recording_id => $recording->id,
-            user => 'auto',
-            message => join(', ', @log_msg),
-        )->save;
+        if (@log_msg) {
+            OddSundays::Model::Log->new(
+                recording_id => $recording->id,
+                user => 'auto',
+                message => join(', ', @log_msg),
+            )->save;
+        }
 
         return {
             action => 'redirect',

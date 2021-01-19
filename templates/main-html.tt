@@ -63,7 +63,7 @@ function showDanceInstructions (id) {
 
 
 <div class="sort-control">
-    Sort by:
+    <label for="sort-control">Sort by: </label>
     <!-- I'd really like to style this better some day -->
     <select id="sort-control">
         <option name="title">Title</option>
@@ -77,7 +77,7 @@ function showDanceInstructions (id) {
         <div class="recording-row" [% IF is_mgmt %]data-mgmt-url="[% manage_uri_for( path => '/edit-recording', id => recording.id) %]"[% END %] sort-recording-title="[% recording.title | uri %]" sort-updated-date="[% recording.date_updated | uri %]">
             <div class="recording-header">
                 <div class="recording-header-title">
-                    <div class="recording-title [% IF recording.deleted %]recording-deleted[% END %]">
+                    <div class="recording-title [% IF recording.deleted || ! recording.ok_to_publish %]recording-deleted[% END %]">
                         [% recording.title | html %]
                     </div>
                     [% IF ! is_mgmt %]
@@ -111,7 +111,7 @@ function showDanceInstructions (id) {
                         </audio>
                     [% END %]
                 </div>
-                <div class="updated-date">[% IF recording.deleted %]Deleted/hidden: [% ELSE %]Updated: [% END %][% recording.date_updated | html %]</div>
+                <div class="updated-date">[% IF recording.deleted %]Deleted/hidden: [% ELSIF ! recording.ok_to_publish %]Not Published [% ELSE %]Updated: [% END %][% recording.date_updated | html %]</div>
             </div>
             [% IF recording.description %]
                 <div class="description rounded-card">
