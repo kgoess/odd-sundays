@@ -80,4 +80,18 @@ $(document).ready(function(){
     $(".logflipper").on('input', function(e) {
         var el = e.target;
     });
+
+    var somethingChangedInForm = false;
+    $("#edit-recording-form input,textarea").on('input', function(e) {
+        somethingChangedInForm = true;
+    });
+
+    $("#log-form-submit-button").on('click', function(e) {
+        if (somethingChangedInForm) {
+            var answer = confirm("There are unsaved changes in the edit form above. You should hit that 'Save' button before adding a log message down here. Continue anyway?");
+            if (! answer) {
+                e.preventDefault();
+            }
+        }
+    });
 });

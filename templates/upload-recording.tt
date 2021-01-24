@@ -24,7 +24,7 @@
 </div>
 
 
-<form enctype="multipart/form-data" method="POST" 
+<form enctype="multipart/form-data" method="POST" id="edit-recording-form"
 [% IF is_edit %]
     action="[% manage_uri_for( path => "/edit-recording" ) %]"
 [% ELSE %]
@@ -130,7 +130,7 @@ Add a log message:
     <input name="user" type="text" value="your name" class="logflipper" data-prompt="your name" data-secondprompt="who now?">
     <input name="message" type="text" value="what you say?" class="logflipper" data-prompt="what you say?" data-secondprompt="yes, what?">
     <input type="hidden" name="recording-id" value="[% recording.id %]">
-    <input type="submit" value="log it">
+    <input type="submit" value="log it" id="log-form-submit-button">
 </form>
 <table class="logs">
     <tr>
