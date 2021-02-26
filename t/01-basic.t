@@ -6,7 +6,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 10;
+use Test::More tests => 11;
 use Test::Exception;
 use OddSundays::Model::Recording;
 use OddSundays::Model::Log;
@@ -39,6 +39,9 @@ sub test_recording_CRUD {
 
     $rec = OddSundays::Model::Recording->load(1);
     is $rec->title, 'changed title';
+
+    $rec->title('The End');
+    is $rec->title_for_sort, 'end', 'title_for_sort ok';
 }
 
 sub test_log_CRUD {

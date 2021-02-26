@@ -35,7 +35,7 @@ sub list_recordings {
     my ($class, %p) = @_;
 
     my @recordings = 
-        sort { $a->title cmp $b->title }
+        sort { $a->title_for_sort cmp $b->title_for_sort }
         OddSundays::Model::Recording->get_all(
             $p{is_mgmt} ? ( include_deleted => 1) : (),
             $p{is_mgmt} ? () : (ok_to_publish => 1),

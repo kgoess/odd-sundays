@@ -16,6 +16,7 @@ use Class::Accessor::Lite(
     'id',
     'sha256',
     'title',
+    '_title_for_sort',
     'orig_filename',
     'filename_for_download',
     'size',
@@ -356,6 +357,21 @@ sub size_hr {
     } else {
         return $self->size . ' bytes';
     }
+}
+
+sub title_for_sort {
+    my ($self) = @_;
+
+    return $self->_title_for_sort if $self->_title_for_sort;
+
+    return unless $self->title;
+
+    my $title_for_sort = lc $self->title;
+    $title_for_sort =~ s/^the //;
+    $title_for_sort =~ s/^a //;
+    $title_for_sort =~ s/^la //; # La Tambourine!
+
+    return $self->_title_for_sort($title_for_sort);
 }
 
 
