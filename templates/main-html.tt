@@ -115,7 +115,7 @@ function showDanceInstructions (id) {
             </div>
             [% IF recording.description %]
                 <div class="description rounded-card">
-                    [% recording.description | html | html_line_break %]
+                    [% recording.description | html | html_para_break %]
                 </div>
             [% END %]
             [% IF recording.tune_name || recording.tune_composer || recording.tune_found_in %]

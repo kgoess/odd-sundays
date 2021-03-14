@@ -79,6 +79,8 @@ body {
     margin-left: 0.5em;
     margin-right: 0.5em;
     min-width: 9em;
+    overflow-x: hidden;
+    max-width: 16em;
 }
 
 .description {
@@ -127,10 +129,11 @@ div.tune-details div {
 }
 
 .recording-title {
-  display: block;
-  font-size: 1.5em;
-  margin-right: 0.83em;
-  font-weight: bold;
+    display: block;
+    font-size: 1.5em;
+    margin-right: 0.83em;
+    font-weight: bold;
+    max-width: 10em;
 }
 
 .recording-deleted {
