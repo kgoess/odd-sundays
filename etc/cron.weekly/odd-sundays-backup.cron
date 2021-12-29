@@ -1,0 +1,33 @@
+#!/bin/sh
+
+# weekly backups for the odd-sundays db
+# - we'll keep 21 weeks worth (it doesn't update that often)
+# - just in case the URL gets out and the db vandalized
+# - this is in addition to the hosting provider's backups
+# - doesn't lock the sqlite db or anything like that
+
+# needs to be installed manually
+# TODO: add it to the rpm spec file
+
+YESTERDAY=$(date -d yesterday --iso-8601)
+
+BASE_DIR=/var/lib/odd-sundays
+DB_DIR=/var/lib/odd-sundays/db
+BACKUP_DIR=$BASE_DIR/bak
+
+KEEP_THIS_MANY=21
+
+mkdir -p $BACKUP_DIR
+
+cp -p $DB_DIR/odd-sundays.sqlite $BACKUP_DIR/$YESTERDAY.sqlite
+
+count=0
+for f in $(find $BACKUP_DIR -name '*.sqlite' -type f | sort -r) ; do
+    count=$(($count+1))
+    if [ "$count" -lt $KEEP_THIS_MANY ]; then
+        continue
+    fi
+    rm $f
+done
+
+   
