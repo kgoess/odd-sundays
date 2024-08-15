@@ -81,6 +81,9 @@ rm -rf %{_builddir}/OddSundays-%{version}
 %setup -D -n OddSundays-0.15
 chmod -R u+w %{_builddir}/OddSundays-%{version}
 
+# customized for our install
+mkdir -p %{buildroot}/usr/local/odd-sundays/templates
+
 if [ -f pm_to_blib ]; then rm -f pm_to_blib; fi
 
 %build
@@ -107,6 +110,22 @@ find $RPM_BUILD_ROOT -type f -name '*.bs' -size 0 -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
+
+# customized for our install:
+
+# 1. templates/ directory
+mkdir -p %{buildroot}/usr/local/odd-sundays/templates
+cp -r %{_builddir}/OddSundays-%{version}/templates/* %{buildroot}/usr/local/odd-sundays/templates/
+
+# 2. static files directory
+mkdir -p %{buildroot}/var/www/bacds.org/public_html/odd-sundays-static/
+cp -r %{_builddir}/OddSundays-%{version}/static/* %{buildroot}/var/www/bacds.org/public_html/odd-sundays-static/
+
+# 3. sqlite and uploaded files
+mkdir -p %{buildroot}/var/lib/odd-sundays/uploads
+mkdir -p %{buildroot}/var/lib/odd-sundays/db
+
+
 %clean
 
 rm -rf $RPM_BUILD_ROOT
@@ -117,7 +136,15 @@ rm -rf $RPM_BUILD_ROOT
 %{perl_sitelib}/*
 %{_mandir}/man3/*
 
+# customized for our install:
+/usr/local/odd-sundays/templates/
+/var/www/bacds.org/public_html/odd-sundays-static/
+%attr(755, root, root) %dir /var/lib/odd-sundays
+%attr(755, apache, apache) %dir /var/lib/odd-sundays/uploads
+%attr(755, apache, apache) %dir /var/lib/odd-sundays/db
+
 %changelog
-* Thu Aug 15 2024 Kevin M. Goess <kevin@goess.org> 0.15-1
+* Sun Oct 04 2020 Kevin M. Goess <cpan@goess.org> 0.01-1
+* Thu Aug 15 2024 Kevin M. Goess <cpan@goess.org> 0.15-1
 - Generated using cpantorpm
 
