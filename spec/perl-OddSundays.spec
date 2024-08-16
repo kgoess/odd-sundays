@@ -3,15 +3,15 @@
 # script.
 #
 #    Package:           perl-OddSundays
-#    Version:           0.15
+#    Version:           0.16
 #    cpantorpm version: 1.16
 #    Date:              Thu Aug 15 2024
 #    Command:
-# /home/kevin/git/App-CPANtoRPM/bin/cpantorpm --spec-only --packager Kevin\ M.\ Goess\ <kevin@goess.org> --no-deps OddSundays-0.15.tar.gz
+# /home/kevin/git/App-CPANtoRPM/bin/cpantorpm --spec-only --packager Kevin\ M.\ Goess\ <kevin@goess.org> --no-deps OddSundays-0.16.tar.gz
 #
 
 Name:           perl-OddSundays
-Version:        0.15
+Version:        0.16
 Release:        1%{?dist}
 Summary:        unknown
 License:        GPL+ or Artistic
@@ -32,13 +32,13 @@ AutoReqProv:    no
 AutoReq:        no
 AutoProv:       no
 
-Provides:       perl(OddSundays) = 0.15
-Provides:       perl(OddSundays::Controller) = 0.15
-Provides:       perl(OddSundays::Controller::ModPerl) = 0.15
-Provides:       perl(OddSundays::Model::Log) = 0.15
-Provides:       perl(OddSundays::Model::Recording) = 0.15
-Provides:       perl(OddSundays::Utils) = 0.15
-Provides:       perl(OddSundays::View) = 0.15
+Provides:       perl(OddSundays) = 0.16
+Provides:       perl(OddSundays::Controller) = 0.16
+Provides:       perl(OddSundays::Controller::ModPerl) = 0.16
+Provides:       perl(OddSundays::Model::Log) = 0.16
+Provides:       perl(OddSundays::Model::Recording) = 0.16
+Provides:       perl(OddSundays::Utils) = 0.16
+Provides:       perl(OddSundays::View) = 0.16
 Requires:       perl(Apache2::Const) >= 2
 Requires:       perl(Apache2::Request) >= 2
 Requires:       perl(Apache2::RequestIO) >= 2
@@ -78,7 +78,7 @@ A perl module
 %prep
 
 rm -rf %{_builddir}/OddSundays-%{version}
-%setup -D -n OddSundays-0.15
+%setup -D -n OddSundays-0.16
 chmod -R u+w %{_builddir}/OddSundays-%{version}
 
 # customized for our install
@@ -145,6 +145,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %changelog
 * Sun Oct 04 2020 Kevin M. Goess <cpan@goess.org> 0.01-1
-* Thu Aug 15 2024 Kevin M. Goess <cpan@goess.org> 0.15-1
+* Thu Aug 15 2024 Kevin M. Goess <cpan@goess.org> 0.16-1
 - Generated using cpantorpm
 

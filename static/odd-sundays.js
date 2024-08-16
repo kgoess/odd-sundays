@@ -86,6 +86,18 @@ $(document).ready(function(){
         somethingChangedInForm = true;
     });
 
+    /* new behavior in alma-9 perl-5.32.1. When processing the form
+     * Apache2::Request gets all kinds of unhappy when it hits the
+     * "Content-Disposition: octet-stream; name="recording" section if there's
+     * no data in it. It stops processing the rest of the items.
+     * Workaround is just to remove the input element if they're not uploading a file.
+     */
+    $("#edit-recording-form").on('submit', function(e) {
+        if (!$("#upload-input").val()) {
+            $("#upload-input").remove();
+        }
+    });
+
     $("#log-form-submit-button").on('click', function(e) {
         if (somethingChangedInForm) {
             var answer = confirm("There are unsaved changes in the edit form above. You should hit that 'Save' button before adding a log message down here. Continue anyway?");

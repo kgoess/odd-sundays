@@ -1,5 +1,9 @@
 Revision history for Perl extension OddSundays.
 
+0.16 Thu Aug 15 19:41:00 2024
+ - Don't submit the "recording" field if there's no upload--Apache2::Request is
+   choking on it
+
 0.01  Sat Sep 19 19:29:32 2020
 	- original version; created by h2xs 1.23 with options
 		-X OddSundays

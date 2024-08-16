@@ -1,6 +1,6 @@
 package OddSundays::Controller;
 
-use strict;
+use 5.16.0;
 use feature 'state';
 use warnings;
 
@@ -253,7 +253,14 @@ sub edit_recording {
 
         my @log_msg;
 
-        if (my $upload = $p{request}->upload("recording")) {
+        my $upload;
+        # new behavior on alma-9: https://www.inter-corporate.com/kb/internal-apreq-error.pl
+        # calling ->upload without an upload throws that error
+        eval { $upload = $p{request}->upload("recording") };
+        if ($@ && "$@" ne 'Internal apreq error') {
+            die $@;
+        }
+        if ($upload) {
             my $upload_info = handle_upload($upload);
             $recording->sha256       ($upload_info->{sha256});
             $recording->size         ($upload_info->{size});

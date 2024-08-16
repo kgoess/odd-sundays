@@ -36,7 +36,7 @@
         <input type="hidden" name="is_edit" value="1">
     [% END %]
     <div>
-        <input type="file" name="recording"> [% IF ! recording %](required)[% END %]
+        <input type="file" name="recording" id="upload-input"> [% IF ! recording %](required)[% END %]
     </div>
     <div>
         Name: <input type="text" name="title" value="[% recording.title | html %]"> (required)
