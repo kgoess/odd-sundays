@@ -19,6 +19,7 @@ use Class::Accessor::Lite(
     '_title_for_sort',
     'orig_filename',
     'filename_for_download',
+    'youtube_url',
     'size',
     'content_type',
     'description',
@@ -64,6 +65,7 @@ sub save {
         title,
         orig_filename,
         filename_for_download,
+        youtube_url,
         size,
         content_type,
         description,
@@ -88,7 +90,7 @@ sub save {
         date_created,
         date_updated
     )
-    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
 EOL
 
     if (! $self->date_created) {
@@ -109,6 +111,7 @@ EOL
             title
             orig_filename
             filename_for_download
+            youtube_url
             size
             content_type
             description
@@ -198,6 +201,7 @@ sub update {
             title = ?,
             orig_filename = ?,
             filename_for_download = ?,
+            youtube_url = ?,
             size = ?,
             content_type = ?,
             description = ?,
@@ -233,6 +237,7 @@ EOL
             title
             orig_filename
             filename_for_download
+            youtube_url
             size
             content_type
             description
@@ -305,6 +310,7 @@ CREATE TABLE recording (
     title VARCHAR(255) NOT NULL, /* length is ignored */
     orig_filename VARCHAR(255),
     filename_for_download VARCHAR(255),
+    youtube_url VARCHAR(255),
     size INT(255) default 0,
     content_type VARCHAR(255),
     description VARCHAR(4096),

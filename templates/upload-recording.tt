@@ -64,6 +64,10 @@
         <span>No spaces or funny characters, add an extension</span>
     </div>
     <div>
+        YouTube URL: <input type="text" name="youtube_url" value="[% recording.youtube_url | html %]">
+        <span>If we don't have the rights, put it on YouTube and let them take care of it.</span>
+    </div>
+    <div>
         Album: <input type="text" name="album" value="[% recording.album | html %]">
     </div>
     <div>

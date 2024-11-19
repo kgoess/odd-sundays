@@ -80,7 +80,7 @@ function showDanceInstructions (id) {
                     <div class="recording-title [% IF recording.deleted || ! recording.ok_to_publish %]recording-deleted[% END %]">
                         [% recording.title | html %]
                     </div>
-                    [% IF ! is_mgmt %]
+                    [% IF ! is_mgmt and ! recording.youtube_url %]
                     <div class="download-link">
                         <a href="[% uri_for( path => "/download-recording", sha256 => recording.sha256) %]" download="[% recording.filename_for_download | html %]">
                             <img alt="download" src="[% static_uri_for('download-icon.png') %]">
@@ -106,9 +106,13 @@ function showDanceInstructions (id) {
                             <button class="fake-audio-for-mgmt"> ▶  🎶 la la la 🎵🎶</button>
                         [% END %]
                     [% ELSE %]
-                        <audio controls> <!-- see  preload="metadata" attr? -->
-                          <source src="[% uri_for( path => "/download-recording", sha256 => recording.sha256) %]" />
-                        </audio>
+                        [% IF recording.youtube_url %]
+                            <a href="[% recording.youtube_url | url %]" target="_blank">View on YouTube</a>
+                        [% ELSE %]
+                            <audio controls> <!-- see  preload="metadata" attr? -->
+                              <source src="[% uri_for( path => "/download-recording", sha256 => recording.sha256) %]" />
+                            </audio>
+                        [% END %]
                     [% END %]
                 </div>
                 <div class="updated-date">[% IF recording.deleted %]Deleted/hidden: [% ELSIF ! recording.ok_to_publish %]Not Published [% ELSE %]Updated: [% END %][% recording.date_updated | html %]</div>

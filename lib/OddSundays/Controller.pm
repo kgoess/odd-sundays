@@ -123,6 +123,7 @@ sub upload_recording {
         $recording->description(wrap_text(scalar($p{request}->param('description'))));
         foreach my $f (qw/
             ok_to_publish
+            youtube_url
             album
             track_num
             track_of
@@ -274,11 +275,11 @@ sub edit_recording {
         if ($recording->description ne $orig->description) {
             push @log_msg, 'description changed';
         }
-
         foreach my $f (qw/
             title
             ok_to_publish
             filename_for_download
+            youtube_url
             album
             track_num
             track_of
@@ -352,7 +353,6 @@ sub wrap_text {
         next unless length > 50;
         $_ = wrap('', '', $_);
     }
-    dump \@lines;
     return join "\n", @lines;
 }
 
